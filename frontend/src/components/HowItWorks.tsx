@@ -4,20 +4,20 @@ import { Compass, Users, Heart } from 'lucide-react';
 const steps = [
     {
         id: 1,
-        title: 'Discover Unique Gems',
-        description: 'Browse through a curated collection of authentic local experiences that you won\'t find in standard guidebooks.',
-        icon: Compass,
-    },
-    {
-        id: 2,
-        title: 'Connect with Locals',
-        description: 'Book directly with passionate local entrepreneurs and guides who are eager to share their culture and stories.',
+        title: 'Join the Community',
+        description: 'Sign up to gain access to our curated list of hidden gems, complete with reviews, prices, and exact locations.',
         icon: Users,
     },
     {
+        id: 2,
+        title: 'Unlock Hidden Details',
+        description: 'Get full access to exclusive local spots, insider tips, and location of the local experience',
+        icon: Compass,
+    },
+    {
         id: 3,
-        title: 'Create Memories',
-        description: 'Immerse yourself in the community, try new things, and create unforgettable memories that last a lifetime.',
+        title: 'Plan Your Adventure',
+        description: 'Connect with authentic experiences and create your perfect itinerary with all the information you need.',
         icon: Heart,
     },
 ];

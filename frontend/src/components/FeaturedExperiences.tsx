@@ -38,7 +38,7 @@ const FeaturedExperiences: React.FC = () => {
                                 <span className="flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div> 5+ stops</span>
                             </div>
                             <button className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-3 rounded-xl transition-all font-semibold group-hover:pl-10">
-                                Book Now <ArrowRight className="w-4 h-4 ml-1" />
+                                Unlock Details <ArrowRight className="w-4 h-4 ml-1" />
                             </button>
                         </div>
                     </div>
