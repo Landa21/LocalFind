@@ -26,9 +26,7 @@ const Categories: React.FC = () => {
                         </span>
                     </button>
                 ))}
-                <button className="px-6 py-3 bg-orange-600 text-white rounded-xl text-sm font-bold hover:bg-orange-700 transition-colors shadow-lg shadow-orange-600/20 flex items-center gap-2">
-                    <span>+</span> Add Experience
-                </button>
+               
             </div>
         </div>
     );
