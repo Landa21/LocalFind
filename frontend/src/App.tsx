@@ -3,18 +3,21 @@ import Hero from './components/Hero';
 import Categories from './components/Categories';
 import FeaturedExperiences from './components/FeaturedExperiences';
 import HowItWorks from './components/HowItWorks';
+import BecomeLocalGuide from './components/BecomeLocalGuide';
+import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-warm-gray font-sans flex flex-col">
       <Navbar />
-      <Hero />
-      <Categories />
-      <FeaturedExperiences />
-      <HowItWorks />
-
-      {/* Spacer for scroll */}
-      <div className="h-[500px]"></div>
+      <div className="flex-grow">
+        <Hero />
+        <Categories />
+        <FeaturedExperiences />
+        <HowItWorks />
+        <BecomeLocalGuide />
+      </div>
+      <Footer />
     </div>
   )
 }
