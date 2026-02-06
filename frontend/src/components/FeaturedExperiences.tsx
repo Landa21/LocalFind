@@ -109,7 +109,7 @@ const FeaturedExperiences: React.FC = () => {
                             ))}
                         </div>
                         <p className="font-serif text-xl text-gray-800 leading-relaxed mb-6">
-                            "Absolutely amazing experiences! The local guides made everything so authentic and memorable. We saw sides of the city we never would have found on our own."
+                            "Absolutely amazing experiences! The experience owners made everything so authentic and memorable. We saw sides of the city we never would have found on our own."
                         </p>
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold text-xs">SM</div>

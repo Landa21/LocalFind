@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
                         <li><a href="#" className="hover:text-orange-500 transition-colors">Featured Experiences</a></li>
                         <li><a href="#" className="hover:text-orange-500 transition-colors">Categories</a></li>
                         <li><a href="#" className="hover:text-orange-500 transition-colors">Latest Reviews</a></li>
-                        <li><a href="#" className="hover:text-orange-500 transition-colors">Local Guides</a></li>
+                        <li><a href="#" className="hover:text-orange-500 transition-colors">Experience Owners</a></li>
                     </ul>
                 </div>
 
@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
                 <div>
                     <h4 className="text-white font-bold mb-6">Hosting</h4>
                     <ul className="space-y-4 text-sm">
-                        <li><a href="#" className="hover:text-orange-500 transition-colors">Become a Local Guide</a></li>
+                        <li><a href="#" className="hover:text-orange-500 transition-colors">Become an Experience Owner</a></li>
                         <li><a href="#" className="hover:text-orange-500 transition-colors">Owner Dashboard</a></li>
                         <li><a href="#" className="hover:text-orange-500 transition-colors">Success Stories</a></li>
                         <li><a href="#" className="hover:text-orange-500 transition-colors">Community Guidelines</a></li>

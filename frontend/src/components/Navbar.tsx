@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
                 <a href="#featured-experiences" className="hover:text-orange-400 transition-colors">Experiences</a>
                 <a href="#" className="hover:text-orange-400 transition-colors">Destinations</a>
                 <a href="#about" className="hover:text-orange-400 transition-colors">About</a>
-                <a href="#" className="text-orange-500 font-bold hover:text-orange-400 transition-colors">Become a Host</a>
+                <a href="#become-local-guide" className="text-orange-500 font-bold hover:text-orange-400 transition-colors">Become a Host</a>
             </div>
 
             <div className="flex items-center gap-6">

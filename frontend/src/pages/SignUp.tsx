@@ -22,7 +22,7 @@ const SignUp: React.FC = () => {
                     <blockquote className="font-serif text-3xl leading-snug mb-6">
                         "I never knew my own city had so much to offer until I joined. Now I host weekend tours and meet amazing people."
                     </blockquote>
-                    <p className="font-medium text-orange-200">– Thabo M., Local Guide</p>
+                    <p className="font-medium text-orange-200">– Thabo M., Experience Owner</p>
                 </div>
             </div>
 

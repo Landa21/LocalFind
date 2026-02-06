@@ -30,7 +30,7 @@ const About: React.FC = () => {
                     <div className="grid grid-cols-2 gap-8 mb-8 border-t border-gray-200 pt-8">
                         <div>
                             <h4 className="font-bold text-3xl text-gray-900 mb-1">500+</h4>
-                            <p className="text-gray-500 text-sm">Local Guides</p>
+                            <p className="text-gray-500 text-sm">Experience Owners</p>
                         </div>
                         <div>
                             <h4 className="font-bold text-3xl text-gray-900 mb-1">50+</h4>
