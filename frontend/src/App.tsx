@@ -5,6 +5,7 @@ import FeaturedExperiences from './components/FeaturedExperiences';
 import HowItWorks from './components/HowItWorks';
 import BecomeLocalGuide from './components/BecomeLocalGuide';
 import Footer from './components/Footer';
+import About from './components/About';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Categories />
         <FeaturedExperiences />
         <HowItWorks />
+        <About />
         <BecomeLocalGuide />
       </div>
       <Footer />
