@@ -7,9 +7,12 @@ const StartTrial: React.FC = () => {
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
             <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900 overflow-hidden">
-                <img
-                    src="/images/loginImg2.jpg"
-                    alt="Host your experience"
+                <video
+                    src="/videos/Pottery.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
                     className="absolute inset-0 w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />

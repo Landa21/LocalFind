@@ -5,7 +5,7 @@ import Categories from '../components/Categories';
 import FeaturedExperiences from '../components/FeaturedExperiences';
 import About from '../components/About';
 import HowItWorks from '../components/HowItWorks';
-import BecomeLocalGuide from '../components/BecomeLocalGuide';
+import BecomeLocalGuide from '../components/ExperienceOwners';
 import Footer from '../components/Footer';
 
 const Home: React.FC = () => {
