@@ -1,27 +1,16 @@
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Categories from './components/Categories';
-import FeaturedExperiences from './components/FeaturedExperiences';
-import HowItWorks from './components/HowItWorks';
-import BecomeLocalGuide from './components/BecomeLocalGuide';
-import Footer from './components/Footer';
-import About from './components/About';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import SignIn from './pages/SignIn';
 
 function App() {
   return (
-    <div className="min-h-screen bg-warm-gray font-sans flex flex-col">
-      <Navbar />
-      <div className="flex-grow">
-        <Hero />
-        <Categories />
-        <FeaturedExperiences />
-        <About />
-        <HowItWorks />
-        <BecomeLocalGuide />
-      </div>
-      <Footer />
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
