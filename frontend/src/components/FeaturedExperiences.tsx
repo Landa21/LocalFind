@@ -1,9 +1,9 @@
 import React from 'react';
-import { MapPin, Star, User, ArrowRight, Camera, Coffee, Music, Utensils, Tent } from 'lucide-react';
+import { Star, User, ArrowRight, Camera, Coffee, Music, Utensils } from 'lucide-react';
 
 const FeaturedExperiences: React.FC = () => {
     return (
-        <section className="w-full bg-warm-gray py-20 px-4">
+        <section id="featured-experiences" className="w-full bg-warm-gray py-20 px-4">
             <div className="max-w-7xl mx-auto">
                 {/* Section Header */}
                 <div className="flex justify-between items-end mb-12">
