@@ -24,7 +24,7 @@ Our mission is to transform the way people explore South Africa by empowering lo
 ### Installation
 1. **Clone the repo:**
    ```bash
-   git clone [https://github.com/your-username/local-experience-finder.git](https://github.com/your-username/local-experience-finder.git)
+   git clone https://github.com/Landa21/LocalFind.git
 
   ### SetUp environment
 2. *Navigate to directory*
