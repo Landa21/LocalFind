@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 
 const BecomeLocalGuide: React.FC = () => {
@@ -38,9 +39,9 @@ const BecomeLocalGuide: React.FC = () => {
                             ))}
                         </div>
 
-                        <button className="self-start bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2 group">
+                        <Link to="/start-trial" className="self-start bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2 group">
                             Start Free Trial <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
