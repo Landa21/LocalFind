@@ -15,8 +15,8 @@ function App() {
         <Hero />
         <Categories />
         <FeaturedExperiences />
-        <HowItWorks />
         <About />
+        <HowItWorks />
         <BecomeLocalGuide />
       </div>
       <Footer />
