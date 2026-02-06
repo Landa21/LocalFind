@@ -1,15 +1,15 @@
 import React from 'react';
-import { Compass, Mail, Lock, ArrowLeft } from 'lucide-react';
+import { Compass, Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
     return (
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
             <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900 overflow-hidden">
                 <img
-                    src="/images/loginImg2.jpg"
-                    alt="Travel destination"
+                    src="/images/LoginImg.png"
+                    alt="Tsitsikamma National Park, Eastern Cape"
                     className="absolute inset-0 w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40" />
@@ -20,13 +20,13 @@ const SignIn: React.FC = () => {
                         <span className="font-serif text-2xl font-bold tracking-tight">LocalFind</span>
                     </div>
                     <blockquote className="font-serif text-3xl leading-snug mb-6">
-                        "The authentic experiences I found through LocalFind completely changed my perspective on travel. It's not just visiting; it's belonging."
+                        "I never knew my own city had so much to offer until I joined. Now I host weekend tours and meet amazing people."
                     </blockquote>
-                    <p className="font-medium text-orange-200">– Elena R., World Traveler</p>
+                    <p className="font-medium text-orange-200">– Thabo M., Local Guide</p>
                 </div>
             </div>
 
-            {/* Right Side - Login Form */}
+            {/* Right Side - Sign Up Form */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 relative">
                 <Link to="/" className="absolute top-8 left-8 text-gray-500 hover:text-orange-600 flex items-center gap-2 transition-colors">
                     <ArrowLeft className="w-4 h-4" /> Back to Home
@@ -34,11 +34,24 @@ const SignIn: React.FC = () => {
 
                 <div className="w-full max-w-md">
                     <div className="mb-10 text-center lg:text-left">
-                        <h1 className="font-serif text-4xl font-bold mb-3 text-gray-900">Welcome back</h1>
-                        <p className="text-gray-500">Please enter your details to sign in.</p>
+                        <h1 className="font-serif text-4xl font-bold mb-3 text-gray-900">Create an account</h1>
+                        <p className="text-gray-500">Join our community of explorers and locals.</p>
                     </div>
 
                     <form className="space-y-6">
+                        {/* Full Name Field */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <div className="relative">
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <input
+                                    type="text"
+                                    placeholder="Enter your full name"
+                                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
+                                />
+                            </div>
+                        </div>
+
                         {/* Email Field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
@@ -59,24 +72,15 @@ const SignIn: React.FC = () => {
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
                                     type="password"
-                                    placeholder="Enter your password"
+                                    placeholder="Create a password"
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
                                 />
                             </div>
                         </div>
 
-                        {/* Remember & Forgot Password */}
-                        <div className="flex items-center justify-between text-sm">
-                            <label className="flex items-center text-gray-600 cursor-pointer">
-                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 mr-2" />
-                                Keep me signed in
-                            </label>
-                            <a href="#" className="font-medium text-orange-600 hover:text-orange-700 hover:underline">Forgot password?</a>
-                        </div>
-
                         {/* Submit Button */}
                         <button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98]">
-                            Sign In
+                            Create Account
                         </button>
                     </form>
 
@@ -86,7 +90,7 @@ const SignIn: React.FC = () => {
                             <div className="w-full border-t border-gray-200"></div>
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-white text-gray-500">Or sign in with</span>
+                            <span className="px-4 bg-white text-gray-500">Or sign up with</span>
                         </div>
                     </div>
 
@@ -102,10 +106,10 @@ const SignIn: React.FC = () => {
                         </button>
                     </div>
 
-                    {/* Sign Up Link */}
+                    {/* Sign In Link */}
                     <div className="mt-8 text-center text-sm text-gray-600">
-                        Don't have an account?
-                        <Link to="/signup" className="font-bold text-orange-600 hover:text-orange-700 ml-1 hover:underline">Sign up for free</Link>
+                        Already have an account?
+                        <Link to="/signin" className="font-bold text-orange-600 hover:text-orange-700 ml-1 hover:underline">Sign in</Link>
                     </div>
                 </div>
             </div>
@@ -113,4 +117,4 @@ const SignIn: React.FC = () => {
     );
 };
 
-export default SignIn;
+export default SignUp;
