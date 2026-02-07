@@ -1,8 +1,43 @@
-import React from 'react';
-import { Compass, Mail, Lock, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Compass, Mail, Lock, ArrowLeft, Loader2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const SignIn: React.FC = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            navigate('/');
+        } catch (err: any) {
+            setError(err.message || 'Failed to sign in. Please check your credentials.');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleSignIn = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithPopup(auth, provider);
+            navigate('/');
+        } catch (err: any) {
+            setError(err.message || 'Failed to sign in with Google.');
+            console.error(err);
+        }
+    };
+
     return (
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
@@ -38,7 +73,13 @@ const SignIn: React.FC = () => {
                         <p className="text-gray-500">Please enter your details to sign in.</p>
                     </div>
 
-                    <form className="space-y-6">
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         {/* Email Field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
@@ -47,6 +88,9 @@ const SignIn: React.FC = () => {
                                 <input
                                     type="email"
                                     placeholder="Enter your email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
                                 />
                             </div>
@@ -60,6 +104,9 @@ const SignIn: React.FC = () => {
                                 <input
                                     type="password"
                                     placeholder="Enter your password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
                                 />
                             </div>
@@ -75,8 +122,17 @@ const SignIn: React.FC = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98]">
-                            Sign In
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Signing In...
+                                </>
+                            ) : 'Sign In'}
                         </button>
                     </form>
 
@@ -92,7 +148,10 @@ const SignIn: React.FC = () => {
 
                     {/* Social Buttons */}
                     <div className="flex gap-4">
-                        <button className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700">
+                        <button
+                            onClick={handleGoogleSignIn}
+                            className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
+                        >
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
                             Google
                         </button>
