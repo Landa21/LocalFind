@@ -1,69 +1,58 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Compass, Mail, Lock, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
+import { useAuth } from '../context/AuthContext';
 
 const SignIn: React.FC = () => {
+    const { signInWithGoogle, signInWithApple, user, loading: authLoading } = useAuth();
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (user && !authLoading) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [user, authLoading, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setLoading(true);
+        setIsSubmitting(true);
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            navigate('/');
+            // AuthContext listener will handle the redirect
         } catch (err: any) {
             setError(err.message || 'Failed to sign in. Please check your credentials.');
             console.error(err);
-        } finally {
-            setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
     const handleGoogleSignIn = async () => {
-        const provider = new GoogleAuthProvider();
         try {
-            await signInWithPopup(auth, provider);
-            navigate('/');
+            await signInWithGoogle();
         } catch (err: any) {
             setError(err.message || 'Failed to sign in with Google.');
-            console.error(err);
         }
-    };
-
-=======
-import React from 'react';
-import { Compass, Mail, Lock, ArrowLeft } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-
-const SignIn: React.FC = () => {
-    const { signInWithGoogle, signInWithApple, user, error, loading } = useAuth();
-    const navigate = useNavigate();
-
-    React.useEffect(() => {
-        if (user && !loading) {
-            navigate('/dashboard', { replace: true });
-        }
-    }, [user, loading, navigate]);
-
-    const handleGoogleSignIn = async () => {
-        await signInWithGoogle();
     };
 
     const handleAppleSignIn = async () => {
-        await signInWithApple();
+        try {
+            await signInWithApple();
+        } catch (err: any) {
+            setError(err.message || 'Failed to sign in with Apple.');
+        }
     };
 
-    if (loading) {
+    if (authLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-white">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
@@ -71,7 +60,6 @@ const SignIn: React.FC = () => {
         );
     }
 
->>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
     return (
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
@@ -107,23 +95,14 @@ const SignIn: React.FC = () => {
                         <p className="text-gray-500">Please enter your details to sign in.</p>
                     </div>
 
-<<<<<<< HEAD
-                    {error && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
-                            {error}
-                        </div>
-                    )}
-
                     <form className="space-y-6" onSubmit={handleSubmit}>
-=======
-                    <form className="space-y-6">
                         {/* Error Message */}
                         {error && (
                             <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4">
                                 {error}
                             </div>
                         )}
->>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
+
                         {/* Email Field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">Email Address</label>
@@ -177,10 +156,10 @@ const SignIn: React.FC = () => {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={isSubmitting}
                             className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            {loading ? (
+                            {isSubmitting ? (
                                 <>
                                     <Loader2 className="w-5 h-5 animate-spin" />
                                     Signing In...
@@ -202,10 +181,7 @@ const SignIn: React.FC = () => {
                     {/* Social Buttons */}
                     <div className="flex gap-4">
                         <button
-<<<<<<< HEAD
-=======
                             type="button"
->>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
                             onClick={handleGoogleSignIn}
                             className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
                         >
