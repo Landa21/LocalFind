@@ -1,0 +1,14 @@
+{
+  "name": "localfind-backend",
+  "version": "1.0.0",
+  "description": "Backend scripts for LocalFind",
+  "main": "seeddata.js",
+  "scripts": {
+    "seed": "node seeddata.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.5.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

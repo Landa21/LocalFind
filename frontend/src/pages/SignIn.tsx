@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { Compass, Mail, Lock, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -38,6 +39,39 @@ const SignIn: React.FC = () => {
         }
     };
 
+=======
+import React from 'react';
+import { Compass, Mail, Lock, ArrowLeft } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const SignIn: React.FC = () => {
+    const { signInWithGoogle, signInWithApple, user, error, loading } = useAuth();
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (user && !loading) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [user, loading, navigate]);
+
+    const handleGoogleSignIn = async () => {
+        await signInWithGoogle();
+    };
+
+    const handleAppleSignIn = async () => {
+        await signInWithApple();
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+            </div>
+        );
+    }
+
+>>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
     return (
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
@@ -73,6 +107,7 @@ const SignIn: React.FC = () => {
                         <p className="text-gray-500">Please enter your details to sign in.</p>
                     </div>
 
+<<<<<<< HEAD
                     {error && (
                         <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
                             {error}
@@ -80,12 +115,23 @@ const SignIn: React.FC = () => {
                     )}
 
                     <form className="space-y-6" onSubmit={handleSubmit}>
+=======
+                    <form className="space-y-6">
+                        {/* Error Message */}
+                        {error && (
+                            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4">
+                                {error}
+                            </div>
+                        )}
+>>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
                         {/* Email Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="email"
+                                    name="email"
                                     type="email"
                                     placeholder="Enter your email"
                                     required
@@ -98,10 +144,12 @@ const SignIn: React.FC = () => {
 
                         {/* Password Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="password">Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="password"
+                                    name="password"
                                     type="password"
                                     placeholder="Enter your password"
                                     required
@@ -114,8 +162,13 @@ const SignIn: React.FC = () => {
 
                         {/* Remember & Forgot Password */}
                         <div className="flex items-center justify-between text-sm">
-                            <label className="flex items-center text-gray-600 cursor-pointer">
-                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 mr-2" />
+                            <label className="flex items-center text-gray-600 cursor-pointer" htmlFor="remember-me">
+                                <input
+                                    id="remember-me"
+                                    name="remember-me"
+                                    type="checkbox"
+                                    className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 mr-2"
+                                />
                                 Keep me signed in
                             </label>
                             <a href="#" className="font-medium text-orange-600 hover:text-orange-700 hover:underline">Forgot password?</a>
@@ -149,13 +202,21 @@ const SignIn: React.FC = () => {
                     {/* Social Buttons */}
                     <div className="flex gap-4">
                         <button
+<<<<<<< HEAD
+=======
+                            type="button"
+>>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
                             onClick={handleGoogleSignIn}
                             className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
                         >
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
                             Google
                         </button>
-                        <button className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700">
+                        <button
+                            type="button"
+                            onClick={handleAppleSignIn}
+                            className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
+                        >
                             <svg className="w-5 h-5" viewBox="0 0 384 512" fill="currentColor">
                                 <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z" />
                             </svg>

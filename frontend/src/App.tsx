@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import StartTrial from './pages/StartTrial';
-import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -12,12 +12,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/start-trial" element={<StartTrial />} />
-          <Route path="/profile" element={<div className="min-h-screen flex items-center justify-center text-white bg-gray-900">Profile Page (Coming Soon)</div>} />
-        </Route>
+        <Route path="/start-trial" element={<StartTrial />} />
       </Routes>
     </Router>
   );

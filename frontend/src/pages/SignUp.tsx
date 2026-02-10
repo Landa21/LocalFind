@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { Compass, Mail, Lock, User, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -42,6 +43,66 @@ const SignUp: React.FC = () => {
         }
     };
 
+=======
+import React from 'react';
+import { Compass, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const SignUp: React.FC = () => {
+    const { signInWithGoogle, signInWithApple, signUpWithEmail, user, loading, error: authError } = useAuth();
+    const navigate = useNavigate();
+    const [fullName, setFullName] = React.useState('');
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [localError, setLocalError] = React.useState<string | null>(null);
+    const [isSigningUp, setIsSigningUp] = React.useState(false);
+
+    React.useEffect(() => {
+        if (user && !loading) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [user, loading, navigate]);
+
+    const handleGoogleSignIn = async () => {
+        await signInWithGoogle();
+    };
+
+    const handleAppleSignIn = async () => {
+        await signInWithApple();
+    };
+
+    const handleSignUp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLocalError(null);
+        setIsSigningUp(true);
+
+        if (!fullName || !email || !password) {
+            setLocalError("Please fill in all fields.");
+            setIsSigningUp(false);
+            return;
+        }
+
+        try {
+            await signUpWithEmail(email, password);
+            // Optionally update profile with full name here if needed, 
+            // though the AuthContext listener will trigger the redirect.
+        } catch (err: any) {
+            setLocalError(err.message || 'Failed to sign up');
+        } finally {
+            setIsSigningUp(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+            </div>
+        );
+    }
+
+>>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
     return (
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
@@ -77,6 +138,7 @@ const SignUp: React.FC = () => {
                         <p className="text-gray-500">Join our community of explorers and locals.</p>
                     </div>
 
+<<<<<<< HEAD
                     {error && (
                         <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm">
                             {error}
@@ -84,13 +146,27 @@ const SignUp: React.FC = () => {
                     )}
 
                     <form className="space-y-6" onSubmit={handleSubmit}>
+=======
+                    <form className="space-y-6" onSubmit={handleSignUp}>
+                        {/* Error Message */}
+                        {(localError || authError) && (
+                            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4">
+                                {localError || authError}
+                            </div>
+                        )}
+
+>>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
                         {/* Full Name Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="fullName">Full Name</label>
                             <div className="relative">
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="fullName"
+                                    name="fullName"
                                     type="text"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
                                     placeholder="Enter your full name"
                                     required
                                     value={fullName}
@@ -102,11 +178,15 @@ const SignUp: React.FC = () => {
 
                         {/* Email Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="email"
+                                    name="email"
                                     type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
                                     required
                                     value={email}
@@ -118,11 +198,15 @@ const SignUp: React.FC = () => {
 
                         {/* Password Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="password">Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="password"
+                                    name="password"
                                     type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Create a password"
                                     required
                                     value={password}
@@ -134,6 +218,7 @@ const SignUp: React.FC = () => {
 
                         {/* Submit Button */}
                         <button
+<<<<<<< HEAD
                             type="submit"
                             disabled={loading}
                             className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
@@ -144,6 +229,12 @@ const SignUp: React.FC = () => {
                                     Creating Account...
                                 </>
                             ) : 'Create Account'}
+=======
+                            disabled={isSigningUp}
+                            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isSigningUp ? 'Creating Account...' : 'Create Account'}
+>>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
                         </button>
                     </form>
 
@@ -160,13 +251,21 @@ const SignUp: React.FC = () => {
                     {/* Social Buttons */}
                     <div className="flex gap-4">
                         <button
+<<<<<<< HEAD
+=======
+                            type="button"
+>>>>>>> f2bf24b (feat: Integrat Firebase Auth, User Dashboard, and Search functionality- Integrate Firebase Authentication (Google, Email/Password) and Firestore.- Implement User Dashboard (Layout, Profile management, Protected Routes).- Add Search feature for experiences (by location/text).- Delete legacy SQL backend files and improved form accessibility.)
                             onClick={handleGoogleSignIn}
                             className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
                         >
                             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
                             Google
                         </button>
-                        <button className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700">
+                        <button
+                            type="button"
+                            onClick={handleAppleSignIn}
+                            className="flex-1 flex items-center justify-center gap-2 border border-gray-200 p-3 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
+                        >
                             <img src="https://www.svgrepo.com/show/448234/apple.svg" alt="Apple" className="w-5 h-5" />
                             Apple
                         </button>

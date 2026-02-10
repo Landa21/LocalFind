@@ -1,7 +1,28 @@
 import React from 'react';
 import { Search, MapPin } from 'lucide-react';
 
-const Hero: React.FC = () => {
+interface HeroProps {
+    onSearch: (query: string) => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ onSearch }) => {
+    const [inputValue, setInputValue] = React.useState('');
+
+    const handleSearch = () => {
+        onSearch(inputValue);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const handleCityClick = (city: string) => {
+        setInputValue(city);
+        onSearch(city);
+    };
+
     return (
         <div className="relative h-screen min-h-[700px] w-full overflow-hidden bg-black">
             {/* Background Video */}
@@ -41,12 +62,20 @@ const Hero: React.FC = () => {
                     <div className="flex-1 flex items-center px-6">
                         <MapPin className="text-orange-500 w-5 h-5 mr-4" />
                         <input
+                            id="search-input"
+                            name="search"
                             type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={handleKeyDown}
                             placeholder="Where do you want to explore?"
                             className="w-full bg-transparent outline-none text-gray-800 placeholder-gray-500 text-lg font-medium"
                         />
                     </div>
-                    <button className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 rounded-xl font-semibold transition-colors text-lg shadow-md flex items-center gap-2">
+                    <button
+                        onClick={handleSearch}
+                        className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 rounded-xl font-semibold transition-colors text-lg shadow-md flex items-center gap-2"
+                    >
                         <Search className="w-5 h-5" />
                         Explore
                     </button>
@@ -55,7 +84,11 @@ const Hero: React.FC = () => {
                 {/* Quick Tags */}
                 <div className="mt-12 flex gap-6 text-sm text-white/90 font-semibold tracking-wide border-t border-white/10 pt-8">
                     {['Cape Town', 'Johannesburg', 'Durban'].map((city) => (
-                        <span key={city} className="cursor-pointer hover:text-orange-300 transition-colors uppercase text-xs">
+                        <span
+                            key={city}
+                            onClick={() => handleCityClick(city)}
+                            className="cursor-pointer hover:text-orange-300 transition-colors uppercase text-xs"
+                        >
                             {city}
                         </span>
                     ))}

@@ -1,8 +1,18 @@
 import React from 'react';
 import { Compass, Mail, Lock, User, ArrowLeft, Building2, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const StartTrial: React.FC = () => {
+    const { user, loading } = useAuth();
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        if (user && !loading) {
+            navigate('/dashboard', { replace: true });
+        }
+    }, [user, loading, navigate]);
+
     return (
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
@@ -45,10 +55,12 @@ const StartTrial: React.FC = () => {
                     <form className="space-y-5">
                         {/* Business Name Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Business / Experience Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="businessName">Business / Experience Name</label>
                             <div className="relative">
                                 <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="businessName"
+                                    name="businessName"
                                     type="text"
                                     placeholder="e.g. Sarah's Pottery Studio"
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
@@ -58,10 +70,12 @@ const StartTrial: React.FC = () => {
 
                         {/* Location Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="location">Location</label>
                             <div className="relative">
                                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="location"
+                                    name="location"
                                     type="text"
                                     placeholder="e.g. Cape Town, Western Cape"
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
@@ -71,10 +85,12 @@ const StartTrial: React.FC = () => {
 
                         {/* Full Name Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Owner's Full Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="ownerName">Owner's Full Name</label>
                             <div className="relative">
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="ownerName"
+                                    name="ownerName"
                                     type="text"
                                     placeholder="Enter your full name"
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
@@ -84,10 +100,12 @@ const StartTrial: React.FC = () => {
 
                         {/* Email Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">Email Address</label>
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="email"
+                                    name="email"
                                     type="email"
                                     placeholder="Enter your email"
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
@@ -97,10 +115,12 @@ const StartTrial: React.FC = () => {
 
                         {/* Password Field */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Create Password</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="password">Create Password</label>
                             <div className="relative">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
+                                    id="password"
+                                    name="password"
                                     type="password"
                                     placeholder="Create a strong password"
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
