@@ -1,7 +1,10 @@
 import React from 'react';
+import toast from 'react-hot-toast';
 import { Compass, Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { sendWelcomeEmail } from '../lib/email';
+
 
 const SignUp: React.FC = () => {
     const { signInWithGoogle, signInWithApple, signUpWithEmail, user, loading, error: authError } = useAuth();
@@ -39,6 +42,8 @@ const SignUp: React.FC = () => {
 
         try {
             await signUpWithEmail(email, password);
+            await sendWelcomeEmail(email, fullName);
+            toast.success('Account created successfully!');
         } catch (err: any) {
             setLocalError(err.message || 'Failed to sign up');
         } finally {
