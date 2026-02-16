@@ -43,7 +43,7 @@ const SignUp: React.FC = () => {
         try {
             await signUpWithEmail(email, password);
             await sendWelcomeEmail(email, fullName);
-            toast.success('Account created successfully!');
+            toast.success('Account created! Please check your email to verify your account.');
         } catch (err: any) {
             setLocalError(err.message || 'Failed to sign up');
         } finally {

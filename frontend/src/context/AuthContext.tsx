@@ -4,7 +4,8 @@ import {
     onAuthStateChanged,
     signInWithPopup,
     signOut,
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    sendEmailVerification
 } from 'firebase/auth';
 import { auth, googleProvider, appleProvider } from '../config/firebase';
 
@@ -64,7 +65,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const signUpWithEmail = async (email: string, password: string) => {
         setError(null);
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await sendEmailVerification(userCredential.user);
         } catch (err: any) {
             setError(mapAuthError(err.code));
             throw err;
