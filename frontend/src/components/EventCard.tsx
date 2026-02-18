@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, MapPin, Clock } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface EventCardProps {
     title: string;
@@ -8,6 +9,7 @@ interface EventCardProps {
     location: string;
     image: string;
     category: string;
+    className?: string; // Added className prop
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -16,11 +18,12 @@ const EventCard: React.FC<EventCardProps> = ({
     time,
     location,
     image,
-    category
+    category,
+    className
 }) => {
     return (
-        <div className="flex gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-3 hover:shadow-md transition-shadow">
-            <div className="w-24 h-24 rounded-xl flex-shrink-0 overflow-hidden bg-gray-100">
+        <div className={cn("flex gap-4 bg-white rounded-2xl h-full p-2 hover:bg-gray-50 transition-colors", className)}>
+            <div className="w-24 h-full rounded-xl flex-shrink-0 overflow-hidden bg-gray-100">
                 <img src={image} alt={title} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0 flex flex-col justify-center">
