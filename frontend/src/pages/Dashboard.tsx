@@ -19,6 +19,18 @@ const Dashboard: React.FC = () => {
         setSelectedLocation(location);
     };
 
+    const moods = [
+        { id: 'all', label: 'All' },
+        { id: 'chill', label: 'Chill' },
+        { id: 'adventurous', label: 'Adventurous' },
+        { id: 'romantic', label: 'Romantic' },
+        { id: 'foodie', label: 'Foodie' },
+        { id: 'nightlife', label: 'Nightlife' },
+        { id: 'nature', label: 'Nature' },
+        { id: 'cultural', label: 'Cultural' },
+    ];
+    const [selectedMood, setSelectedMood] = useState('all');
+
     // Mock Data
     const recommendations = [
         { id: 1, name: 'The Hidden Garden', category: 'Nature', rating: 4.8, reviews: 124, location: 'City Center', image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=400' },
@@ -81,6 +93,27 @@ const Dashboard: React.FC = () => {
                             className="pl-12 pr-4 py-3.5 rounded-2xl bg-white border-0 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-100 focus:shadow-md w-full transition-all"
                         />
                         <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+                    </div>
+
+                    {/* Mood Selector */}
+                    <div className="mt-8">
+                        <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 mask-linear-fade">
+                            {moods.map((mood) => (
+                                <button
+                                    key={mood.id}
+                                    onClick={() => setSelectedMood(mood.id)}
+                                    className={`
+                                        whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200
+                                        ${selectedMood === mood.id
+                                            ? 'bg-gray-900 text-white shadow-md transform scale-105'
+                                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-100 hover:border-gray-200'
+                                        }
+                                    `}
+                                >
+                                    {mood.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
