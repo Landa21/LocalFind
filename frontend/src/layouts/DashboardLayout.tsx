@@ -7,7 +7,6 @@ import {
     LogOut,
     Compass,
     Heart,
-    Calendar,
     Bell
 } from 'lucide-react';
 import UserMenu from '../components/UserMenu';
@@ -20,7 +19,6 @@ const DashboardLayout: React.FC = () => {
     const menuItems = [
         { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
         { path: '/profile', label: 'My Profile', icon: User },
-        { path: '/bookings', label: 'My Bookings', icon: Calendar },
         { path: '/favorites', label: 'Favorites', icon: Heart },
         { path: '/settings', label: 'Settings', icon: Settings },
     ];
