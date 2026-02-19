@@ -10,7 +10,9 @@ import MapPopup from '../components/MapPopup';
 
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
-    const [showWelcome, setShowWelcome] = useState(true);
+    const [showWelcome, setShowWelcome] = useState(() => {
+        return !sessionStorage.getItem('welcomeShown');
+    });
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
 
     const handleLocationClick = (location: string) => {
@@ -51,7 +53,10 @@ const Dashboard: React.FC = () => {
             {showWelcome && (
                 <WelcomePopup
                     userName={user?.displayName?.split(' ')[0] || 'Friend'}
-                    onClose={() => setShowWelcome(false)}
+                    onClose={() => {
+                        setShowWelcome(false);
+                        sessionStorage.setItem('welcomeShown', 'true');
+                    }}
                 />
             )}
 

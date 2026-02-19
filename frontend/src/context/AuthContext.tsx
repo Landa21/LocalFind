@@ -57,6 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setError(null);
         try {
             await signOut(auth);
+            sessionStorage.removeItem('welcomeShown');
         } catch (err: any) {
             setError(err.message);
         }
