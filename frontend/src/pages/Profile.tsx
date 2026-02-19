@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile } from 'firebase/auth';
 import { Camera, Save } from 'lucide-react';
@@ -9,6 +9,13 @@ const Profile: React.FC = () => {
     const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+    useEffect(() => {
+        if (user) {
+            setDisplayName(user.displayName || '');
+            setPhotoURL(user.photoURL || '');
+        }
+    }, [user]);
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -63,7 +70,7 @@ const Profile: React.FC = () => {
                                     value={photoURL}
                                     onChange={(e) => setPhotoURL(e.target.value)}
                                     placeholder="https://example.com/avatar.jpg"
-                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-100 focus:border-orange-500 outline-none transition-all"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-100 focus:border-orange-500 outline-none transition-all text-gray-900"
                                 />
                                 <p className="text-xs text-gray-500 mt-1">Paste a direct link to an image (e.g. from imgur, unsplash)</p>
                             </div>
@@ -77,7 +84,7 @@ const Profile: React.FC = () => {
                                     type="text"
                                     value={displayName}
                                     onChange={(e) => setDisplayName(e.target.value)}
-                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-100 focus:border-orange-500 outline-none transition-all"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-100 focus:border-orange-500 outline-none transition-all text-gray-900"
                                 />
                             </div>
 

@@ -67,7 +67,7 @@ const DashboardLayout: React.FC = () => {
                 <div className="p-4 border-t border-gray-100">
                     <div className="flex items-center gap-3 px-4 py-3 mb-2">
                         <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm">
-                            {user?.displayName ? user.displayName[0].toUpperCase() : user?.email?.[0].toUpperCase() || 'U'}
+                            {(user?.displayName || user?.email || 'U')[0].toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-900 truncate">
@@ -95,7 +95,7 @@ const DashboardLayout: React.FC = () => {
                     <span className="font-serif text-lg font-bold">LocalFind</span>
                 </Link>
                 <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-xs">
-                    {user?.displayName ? user.displayName[0].toUpperCase() : 'U'}
+                    {(user?.displayName || user?.email || 'U')[0].toUpperCase()}
                 </div>
             </div>
 
