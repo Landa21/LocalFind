@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Search, Bell, Sparkles } from 'lucide-react';
+import { Sparkles, Search } from 'lucide-react';
 import WelcomePopup from '../components/WelcomePopup';
 import ReviewCard from '../components/ReviewCard';
 import EventCard from '../components/EventCard';
@@ -67,20 +67,15 @@ const Dashboard: React.FC = () => {
                     <h1 className="font-serif text-3xl font-bold text-gray-900">
                         Welcome back, {user?.displayName?.split(' ')[0] || 'Explorer'}!
                     </h1>
-                    <p className="text-gray-500 mt-1">Discover what's happening around you.</p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <button className="p-2 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:shadow-sm transition-all relative">
-                        <Bell className="w-5 h-5" />
-                        <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
-                    </button>
-                    <div className="relative group">
+                    <p className="text-gray-500 mt-1 mb-6">Discover what's happening around you.</p>
+
+                    <div className="relative group max-w-md">
                         <input
                             type="text"
                             placeholder="Search places..."
-                            className="pl-10 pr-4 py-2 rounded-full bg-white border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-orange-300 w-full md:w-64 transition-all"
+                            className="pl-12 pr-4 py-3.5 rounded-2xl bg-white border-0 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-100 focus:shadow-md w-full transition-all"
                         />
-                        <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 transform -translate-y-1/2" />
+                        <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
                     </div>
                 </div>
             </div>

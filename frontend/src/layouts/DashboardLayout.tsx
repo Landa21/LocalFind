@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
     User,
@@ -7,23 +7,15 @@ import {
     LogOut,
     Compass,
     Heart,
-    Calendar
+    Calendar,
+    Bell
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import UserMenu from '../components/UserMenu';
 
 const DashboardLayout: React.FC = () => {
-    const { logout, user } = useAuth();
+    // const { logout, user } = useAuth(); // potentially unused now if only UserMenu needs it, but checked sidebar loop usage
     const location = useLocation();
-    const navigate = useNavigate();
-
-    const handleLogout = async () => {
-        try {
-            await logout();
-            navigate('/signin');
-        } catch (error) {
-            console.error('Failed to log out', error);
-        }
-    };
+    // const navigate = useNavigate(); // unused in this file now
 
     const menuItems = [
         { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
@@ -63,29 +55,6 @@ const DashboardLayout: React.FC = () => {
                         );
                     })}
                 </div>
-
-                <div className="p-4 border-t border-gray-100">
-                    <div className="flex items-center gap-3 px-4 py-3 mb-2">
-                        <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm">
-                            {(user?.displayName || user?.email || 'U')[0].toUpperCase()}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                                {user?.displayName || 'User'}
-                            </p>
-                            <p className="text-xs text-gray-500 truncate">
-                                {user?.email}
-                            </p>
-                        </div>
-                    </div>
-                    <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
-                    </button>
-                </div>
             </aside>
 
             {/* Mobile Header (Visible only on small screens) */}
@@ -94,15 +63,27 @@ const DashboardLayout: React.FC = () => {
                     <Compass className="w-6 h-6 text-orange-500" />
                     <span className="font-serif text-lg font-bold">LocalFind</span>
                 </Link>
-                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-xs">
-                    {(user?.displayName || user?.email || 'U')[0].toUpperCase()}
-                </div>
+                <UserMenu />
             </div>
 
-            {/* Main Content */}
-            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-7xl mx-auto">
-                <Outlet />
-            </main>
+            {/* Main Content Area */}
+            <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
+                {/* Desktop Top Navbar */}
+                <header className="hidden md:flex items-center justify-end px-8 py-4 bg-transparent sticky top-0 z-10">
+                    <div className="flex items-center gap-4">
+                        <button className="p-2 rounded-full hover:bg-gray-100/50 text-gray-500 hover:text-gray-900 transition-colors relative">
+                            <Bell className="w-5 h-5" />
+                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                        </button>
+                        <div className="h-8 w-px bg-gray-200 mx-1"></div>
+                        <UserMenu />
+                    </div>
+                </header>
+
+                <main className="flex-1 p-4 md:p-8 pt-20 md:pt-8 w-full max-w-7xl mx-auto">
+                    <Outlet />
+                </main>
+            </div>
         </div>
     );
 };
