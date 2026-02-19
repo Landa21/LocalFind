@@ -11,6 +11,7 @@ interface ReviewCardProps {
     imageUrl?: string;
     initialLikes?: number;
     className?: string;
+    onLocationClick?: (location: string) => void;
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({
@@ -21,7 +22,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     rating,
     imageUrl,
     initialLikes = 0,
-    className
+    className,
+    onLocationClick
 }) => {
     const [likes, setLikes] = useState(initialLikes);
     const [isLiked, setIsLiked] = useState(false);
@@ -79,7 +81,15 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                     <h4 className="font-bold text-sm leading-tight">{userName}</h4>
                     <div className="flex items-center text-xs text-white/90">
                         <MapPin className="w-3 h-3 mr-1" />
-                        {location}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onLocationClick?.(location);
+                            }}
+                            className="hover:underline decoration-white/50 underline-offset-2 transition-all hover:text-white"
+                        >
+                            {location}
+                        </button>
                     </div>
                 </div>
                 {/* Rating Badge */}

@@ -8,6 +8,7 @@ interface RecommendationCardProps {
     reviews: number;
     location: string;
     image: string;
+    onLocationClick?: (location: string) => void;
 }
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({
@@ -16,7 +17,8 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
     rating,
     reviews,
     location,
-    image
+    image,
+    onLocationClick
 }) => {
     return (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md transition-all">
@@ -34,10 +36,15 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
             <div className="p-4">
                 <div className="text-xs text-orange-600 font-medium mb-1">{category}</div>
                 <h4 className="font-bold text-gray-900 mb-1 truncate">{name}</h4>
-                <div className="flex items-center text-xs text-gray-500 mb-2">
-                    <MapPin className="w-3 h-3 mr-1" />
-                    {location}
-                </div>
+                <button
+                    onClick={() => onLocationClick?.(location)}
+                    className="flex items-center text-xs text-gray-500 mb-2 hover:text-orange-600 transition-colors group/loc"
+                >
+                    <MapPin className="w-3 h-3 mr-1 group-hover/loc:text-orange-500" />
+                    <span className="underline decoration-transparent group-hover/loc:decoration-orange-300 underline-offset-2 transition-all">
+                        {location}
+                    </span>
+                </button>
                 <div className="text-xs text-gray-400">
                     {reviews} reviews
                 </div>

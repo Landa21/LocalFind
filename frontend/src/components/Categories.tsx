@@ -26,7 +26,7 @@ const Categories: React.FC = () => {
                         </span>
                     </button>
                 ))}
-               
+
             </div>
         </div>
     );

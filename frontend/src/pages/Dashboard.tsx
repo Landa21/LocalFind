@@ -6,10 +6,16 @@ import ReviewCard from '../components/ReviewCard';
 import EventCard from '../components/EventCard';
 import RecommendationCard from '../components/RecommendationCard';
 import { CardStack, type CardStackItem } from '../components/ui/card-stack';
+import MapPopup from '../components/MapPopup';
 
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
     const [showWelcome, setShowWelcome] = useState(true);
+    const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+
+    const handleLocationClick = (location: string) => {
+        setSelectedLocation(location);
+    };
 
     // Mock Data
     const recommendations = [
@@ -48,6 +54,12 @@ const Dashboard: React.FC = () => {
                     onClose={() => setShowWelcome(false)}
                 />
             )}
+
+            <MapPopup
+                isOpen={!!selectedLocation}
+                onClose={() => setSelectedLocation(null)}
+                locationName={selectedLocation || ''}
+            />
 
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -88,7 +100,11 @@ const Dashboard: React.FC = () => {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             {recommendations.map(place => (
-                                <RecommendationCard key={place.id} {...place} />
+                                <RecommendationCard
+                                    key={place.id}
+                                    {...place}
+                                    onLocationClick={handleLocationClick}
+                                />
                             ))}
                         </div>
                     </section>
@@ -105,6 +121,7 @@ const Dashboard: React.FC = () => {
                                     <ReviewCard
                                         {...item.review}
                                         className="shadow-none border-none w-full h-full"
+                                        onLocationClick={handleLocationClick}
                                     />
                                 )}
                             />
@@ -132,29 +149,7 @@ const Dashboard: React.FC = () => {
                         </button>
                     </section>
 
-                    {/* Quick Stats/Activity */}
-                    <section className="bg-orange-600 text-white rounded-3xl p-4 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full -ml-12 -mb-12 blur-xl"></div>
 
-                        <div className="relative z-10">
-                            <h3 className="font-bold text-lg mb-1">Weekly Goal</h3>
-                            <p className="text-orange-100 text-xs mb-4">You've visited 2 new places this week!</p>
-
-                            <div className="flex items-end gap-1 mb-2">
-                                <span className="text-3xl font-bold">2</span>
-                                <span className="text-sm text-orange-200 mb-1">/ 5 places</span>
-                            </div>
-
-                            <div className="w-full bg-black/20 rounded-full h-1.5 mb-4">
-                                <div className="bg-white rounded-full h-1.5 w-2/5"></div>
-                            </div>
-
-                            <button className="w-full py-2 bg-white text-orange-600 font-bold rounded-xl hover:bg-orange-50 transition-colors text-xs shadow-sm">
-                                View Achievements
-                            </button>
-                        </div>
-                    </section>
 
                 </div>
             </div>
