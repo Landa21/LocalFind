@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Heart, MapPin, Star, MessageCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface ReviewCardProps {
+    id: number | string;
     userName: string;
     userImage?: string;
     location: string;
@@ -15,6 +17,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({
+    id,
     userName,
     userImage,
     location,
@@ -25,9 +28,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     className,
     onLocationClick
 }) => {
+    const { isFavorite, addFavorite, removeFavorite } = useFavorites();
     const [likes, setLikes] = useState(initialLikes);
-    const [isLiked, setIsLiked] = useState(false);
     const [showComments, setShowComments] = useState(false);
+
+    // Check if the item is already favored
+    const isLiked = isFavorite(id);
+
     const [comments, setComments] = useState([
         { id: 1, user: 'Alex', text: 'Looks amazing! 😍' },
         { id: 2, user: 'Jordan', text: 'Adding this to my list.' },
@@ -35,13 +42,24 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         { id: 4, user: 'Casey', text: 'Great photo!' },
     ]);
 
-    const handleLike = () => {
+    const handleLike = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (isLiked) {
             setLikes(likes - 1);
+            removeFavorite(id);
         } else {
             setLikes(likes + 1);
+            addFavorite({
+                id,
+                userName,
+                userImage,
+                location,
+                caption,
+                rating,
+                imageUrl,
+                initialLikes
+            });
         }
-        setIsLiked(!isLiked);
     };
 
     const hasImage = !!imageUrl;
@@ -149,7 +167,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                     {/* Comments Section (Expandable) */}
                     {showComments && (
                         <div className="mt-3 pt-3 border-t border-white/20 space-y-2 animate-in slide-in-from-bottom-2 fade-in duration-300">
-                            {comments.map((comment) => (
+                            {comments.map((comment: { id: number; user: string; text: string }) => (
                                 <div key={comment.id} className="flex gap-2 items-start text-xs text-white/90">
                                     <span className="font-bold text-white">{comment.user}:</span>
                                     <span>{comment.text}</span>

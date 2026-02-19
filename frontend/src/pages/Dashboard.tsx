@@ -156,6 +156,7 @@ const Dashboard: React.FC = () => {
                                 renderCard={(item) => (
                                     <ReviewCard
                                         {...item.review}
+                                        id={item.review.id}
                                         className="shadow-none border-none w-full h-full"
                                         onLocationClick={handleLocationClick}
                                     />

@@ -18,8 +18,8 @@ const DashboardLayout: React.FC = () => {
 
     const menuItems = [
         { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-        { path: '/profile', label: 'My Profile', icon: User },
         { path: '/favorites', label: 'Favorites', icon: Heart },
+        { path: '/profile', label: 'My Profile', icon: User },
         { path: '/settings', label: 'Settings', icon: Settings },
     ];
 
