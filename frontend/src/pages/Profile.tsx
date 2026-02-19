@@ -9,6 +9,7 @@ const Profile: React.FC = () => {
     const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+    const [imageError, setImageError] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -54,8 +55,13 @@ const Profile: React.FC = () => {
                         <div className="flex items-center gap-6 pb-6 border-b border-gray-100">
                             <div className="relative group">
                                 <div className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden border-4 border-white shadow-md">
-                                    {photoURL ? (
-                                        <img src={photoURL} alt="Profile" className="w-full h-full object-cover" />
+                                    {photoURL && !imageError ? (
+                                        <img
+                                            src={photoURL}
+                                            alt="Profile"
+                                            className="w-full h-full object-cover"
+                                            onError={() => setImageError(true)}
+                                        />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-400">
                                             <Camera className="w-8 h-8" />
@@ -68,7 +74,10 @@ const Profile: React.FC = () => {
                                 <input
                                     type="url"
                                     value={photoURL}
-                                    onChange={(e) => setPhotoURL(e.target.value)}
+                                    onChange={(e) => {
+                                        setPhotoURL(e.target.value);
+                                        setImageError(false);
+                                    }}
                                     placeholder="https://example.com/avatar.jpg"
                                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-100 focus:border-orange-500 outline-none transition-all text-gray-900"
                                 />
