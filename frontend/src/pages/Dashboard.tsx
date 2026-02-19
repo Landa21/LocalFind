@@ -144,7 +144,10 @@ const Dashboard: React.FC = () => {
 
                     {/* Community Feed / Reviews */}
                     <section>
-                        <h2 className="font-serif text-xl font-bold text-gray-900 mb-4">Community Moments</h2>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="font-serif text-xl font-bold text-gray-900">Community Moments</h2>
+                            <button className="text-sm font-medium text-orange-600 hover:text-orange-700">View More</button>
+                        </div>
                         <div className="flex items-center justify-center w-full">
                             <CardStack<ReviewStackItem>
                                 items={stackItems}
