@@ -4,6 +4,7 @@ import { Compass, Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { sendWelcomeEmail } from '../lib/email';
+import { validateEmail, validatePassword } from '../lib/validation';
 
 
 const SignUp: React.FC = () => {
@@ -29,6 +30,7 @@ const SignUp: React.FC = () => {
         await signInWithApple();
     };
 
+
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
         setLocalError(null);
@@ -36,6 +38,18 @@ const SignUp: React.FC = () => {
 
         if (!fullName || !email || !password) {
             setLocalError("Please fill in all fields.");
+            setIsSigningUp(false);
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            setLocalError("Please enter a valid email address (e.g., name@example.com).");
+            setIsSigningUp(false);
+            return;
+        }
+
+        if (!validatePassword(password)) {
+            setLocalError("Password must be at least 8 characters long and include uppercase, lowercase, and a number.");
             setIsSigningUp(false);
             return;
         }
@@ -134,6 +148,7 @@ const SignUp: React.FC = () => {
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
                                 />
                             </div>
+                            <p className="mt-1.5 text-xs text-gray-500">Use a standard email format (e.g., name@example.com)</p>
                         </div>
 
                         {/* Password Field */}
@@ -151,6 +166,7 @@ const SignUp: React.FC = () => {
                                     className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all bg-gray-50 text-gray-800"
                                 />
                             </div>
+                            <p className="mt-1.5 text-xs text-gray-500">At least 8 characters, with uppercase, lowercase, and a number.</p>
                         </div>
 
                         {/* Submit Button */}
