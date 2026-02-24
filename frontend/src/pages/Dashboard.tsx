@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Sparkles, Search } from 'lucide-react';
 import WelcomePopup from '../components/WelcomePopup';
@@ -129,7 +130,7 @@ const Dashboard: React.FC = () => {
                                 <Sparkles className="w-5 h-5 text-orange-500" />
                                 Recommended for You
                             </h2>
-                            <button className="text-sm font-medium text-orange-600 hover:text-orange-700">See All</button>
+                            <Link to="/recommendations" className="text-sm font-medium text-orange-600 hover:text-orange-700">See All</Link>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                             {recommendations.map(place => (

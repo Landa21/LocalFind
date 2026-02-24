@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Recommendations from './pages/Recommendations';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           }>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/settings" element={<div className="p-8">Settings Coming Soon</div>} />
           </Route>
