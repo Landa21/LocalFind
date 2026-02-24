@@ -31,7 +31,7 @@ const Favorites: React.FC = () => {
             <div className="h-[calc(100vh-200px)]">
                 <ParallaxScroll
                     items={favorites}
-                    renderItem={(item, index) => (
+                    renderItem={(item) => (
                         <ReviewCard
                             key={item.id}
                             {...item}

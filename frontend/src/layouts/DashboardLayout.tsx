@@ -4,7 +4,6 @@ import {
     LayoutDashboard,
     User,
     Settings,
-    LogOut,
     Compass,
     Heart,
     Bell

@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ idToken }),
+                        credentials: 'include',
                     });
                 } catch (err) {
                     console.error("Failed to sync session with backend:", err);
@@ -76,6 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await signOut(auth);
             await fetch(`${BACKEND_URL}/api/sessionLogout`, {
                 method: 'POST',
+                credentials: 'include',
             });
             sessionStorage.removeItem('welcomeShown');
         } catch (err: any) {
