@@ -175,7 +175,7 @@ const Dashboard: React.FC = () => {
                     <section className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="font-bold text-gray-900 text-lg">Upcoming Events</h3>
-                            <button className="text-xs font-bold text-orange-600 uppercase tracking-wide hover:text-orange-700">View All</button>
+                            <Link to="/events" className="text-xs font-bold text-orange-600 uppercase tracking-wide hover:text-orange-700">View All</Link>
                         </div>
                         <div className="space-y-4">
                             {upcomingEvents.map(event => (
