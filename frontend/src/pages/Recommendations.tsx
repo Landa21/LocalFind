@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Filter, Search } from 'lucide-react';
 import RecommendationCard from '../components/RecommendationCard';
 import MapPopup from '../components/MapPopup';
+import { useDebounce } from '../lib/utils';
 
 const Recommendations: React.FC = () => {
     const navigate = useNavigate();
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
     const handleLocationClick = (location: string) => {
         setSelectedLocation(location);
@@ -23,6 +26,12 @@ const Recommendations: React.FC = () => {
         { id: 7, name: 'Vintage Cinema', category: 'Entertainment', rating: 4.7, reviews: 118, location: 'Cinema District', image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=400' },
         { id: 8, name: 'Local Farmer Market', category: 'Food', rating: 4.9, reviews: 425, location: 'Green Plaza', image: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=400' },
     ];
+
+    const filteredRecommendations = allRecommendations.filter(item =>
+        item.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        item.category.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        item.location.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+    );
 
     return (
         <div className="space-y-8 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -59,7 +68,9 @@ const Recommendations: React.FC = () => {
                             <input
                                 type="text"
                                 placeholder="Filter results..."
-                                className="pl-10 pr-4 py-2.5 rounded-xl bg-white border border-gray-100 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-orange-200 w-full transition-all"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="pl-10 pr-4 py-2.5 rounded-xl bg-white border border-gray-100 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-orange-200 w-full transition-all text-gray-900"
                             />
                             <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 transform -translate-y-1/2" />
                         </div>
@@ -71,21 +82,31 @@ const Recommendations: React.FC = () => {
             </div>
 
             {/* Grid Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {allRecommendations.map(place => (
-                    <div key={place.id} className="animate-in fade-in zoom-in-95 duration-500 fill-mode-both" style={{ animationDelay: `${place.id * 50}ms` }}>
-                        <RecommendationCard
-                            {...place}
-                            onLocationClick={handleLocationClick}
-                        />
+            {filteredRecommendations.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {filteredRecommendations.map(place => (
+                        <div key={place.id} className="animate-in fade-in zoom-in-95 duration-500 fill-mode-both" style={{ animationDelay: `${place.id * 50}ms` }}>
+                            <RecommendationCard
+                                {...place}
+                                onLocationClick={handleLocationClick}
+                            />
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                        <Search className="w-8 h-8 text-gray-300" />
                     </div>
-                ))}
-            </div>
+                    <h3 className="text-xl font-bold text-gray-900">No results found</h3>
+                    <p className="text-gray-500 mt-2">We couldn't find any recommendations matching "{searchQuery}"</p>
+                </div>
+            )}
 
             {/* Empty State / Load More */}
             <div className="pt-8 flex flex-col items-center">
                 <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
-                <p className="text-gray-400 text-sm italic">Showing {allRecommendations.length} recommendations found for you.</p>
+                <p className="text-gray-400 text-sm italic">Showing {filteredRecommendations.length} recommendations found for you.</p>
             </div>
         </div>
     );
