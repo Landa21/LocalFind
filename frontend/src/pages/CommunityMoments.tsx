@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, Search, Filter } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Search, Filter, Plus } from 'lucide-react';
 import ReviewCard from '../components/ReviewCard';
 import MapPopup from '../components/MapPopup';
+import UploadMomentPopup from '../components/UploadMomentPopup';
 import { useDebounce } from '../lib/utils';
 
 const CommunityMoments: React.FC = () => {
@@ -11,16 +12,13 @@ const CommunityMoments: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+    const [isUploadPopupOpen, setIsUploadPopupOpen] = useState(false);
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
     const categories = ['All', 'Nature', 'Shopping', 'Cafe', 'Culture', 'Nightlife', 'Wellness', 'Entertainment', 'Food'];
 
-    const handleLocationClick = (location: string) => {
-        setSelectedLocation(location);
-    };
-
     // Mock Data
-    const allMoments = [
+    const [allMoments, setAllMoments] = useState([
         { id: 1, userName: 'Sarah M.', location: 'The Hidden Garden', caption: 'It was great!', rating: 5, imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=600', initialLikes: 24, category: 'Nature' },
         { id: 2, userName: 'John D.', location: 'Retro Vinyl Shop', caption: 'Amazing collection!', rating: 4.5, imageUrl: 'https://images.unsplash.com/photo-1532452119098-a3650b3c46d3?auto=format&fit=crop&q=80&w=600', initialLikes: 12, category: 'Shopping' },
         { id: 3, userName: 'Emily R.', location: 'Artisan Coffee Co.', caption: 'Best latte in town.', rating: 5, imageUrl: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=600', initialLikes: 45, category: 'Cafe' },
@@ -29,7 +27,27 @@ const CommunityMoments: React.FC = () => {
         { id: 6, userName: 'David L.', location: 'Ocean Mist Spa', caption: 'Feeling recharged.', rating: 4.8, imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=600', initialLikes: 32, category: 'Wellness' },
         { id: 7, userName: 'Sophia W.', location: 'Vintage Cinema', caption: 'Classic vibes.', rating: 4.7, imageUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=600', initialLikes: 21, category: 'Entertainment' },
         { id: 8, userName: 'Ryan P.', location: 'Local Farmer Market', caption: 'Fresh produce everywhere!', rating: 4.9, imageUrl: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=600', initialLikes: 38, category: 'Food' },
-    ];
+    ]);
+
+    const handleLocationClick = (location: string) => {
+        setSelectedLocation(location);
+    };
+
+    const handleShareMoment = (newMoment: {
+        userName: string;
+        location: string;
+        caption: string;
+        rating: number;
+        imageUrl: string;
+        category: string;
+    }) => {
+        const momentToAdd = {
+            ...newMoment,
+            id: Date.now(),
+            initialLikes: 0
+        };
+        setAllMoments([momentToAdd, ...allMoments]);
+    };
 
     const filteredMoments = allMoments.filter(moment => {
         const matchesSearch = moment.userName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
@@ -58,7 +76,7 @@ const CommunityMoments: React.FC = () => {
                 </button>
 
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                    <div>
+                    <div className="flex-1">
                         <div className="flex items-center gap-2 text-orange-500 mb-2">
                             <MessageCircle size={20} />
                             <span className="text-xs font-bold uppercase tracking-widest">Community Feed</span>
@@ -68,6 +86,13 @@ const CommunityMoments: React.FC = () => {
                             See what the community is saying about their favorite hidden gems.
                         </p>
                     </div>
+                    <button
+                        onClick={() => setIsUploadPopupOpen(true)}
+                        className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white font-bold rounded-2xl shadow-lg shadow-orange-200 hover:bg-orange-600 hover:shadow-orange-300 transition-all active:scale-95"
+                    >
+                        <Plus size={20} />
+                        <span>Share a Moment</span>
+                    </button>
                 </div>
             </div>
 
@@ -145,6 +170,11 @@ const CommunityMoments: React.FC = () => {
                 <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
                 <p className="text-gray-400 text-sm italic">Share your own moments and inspire others.</p>
             </div>
+            <UploadMomentPopup
+                isOpen={isUploadPopupOpen}
+                onClose={() => setIsUploadPopupOpen(false)}
+                onShare={handleShareMoment}
+            />
         </div>
     );
 };
