@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Filter, Search } from 'lucide-react';
 import EventCard from '../components/EventCard';
+import { useDebounce } from '../lib/utils';
 
 const Events: React.FC = () => {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
     const categories = ['All', 'Music', 'Art', 'Food', 'Culture', 'Sports', 'Wellness'];
 
@@ -21,9 +24,12 @@ const Events: React.FC = () => {
         { id: 8, title: 'Wine Tasting', date: 'Sun, 12 Mar', time: '15:00', location: 'Vineyard Estate', image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1470&auto=format&fit=crop', category: 'Food' },
     ];
 
-    const filteredEvents = selectedCategory === 'All'
-        ? allEvents
-        : allEvents.filter(event => event.category === selectedCategory);
+    const filteredEvents = allEvents.filter(event => {
+        const matchesCategory = selectedCategory === 'All' || event.category === selectedCategory;
+        const matchesSearch = event.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+            event.location.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
 
     return (
         <div className="space-y-8 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -76,7 +82,9 @@ const Events: React.FC = () => {
                         <input
                             type="text"
                             placeholder="Search events..."
-                            className="pl-10 pr-4 py-2 rounded-xl bg-gray-50 border border-transparent focus:bg-white focus:border-orange-200 focus:ring-2 focus:ring-orange-100 text-sm w-full transition-all outline-none"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-10 pr-4 py-2 rounded-xl bg-gray-50 border border-transparent focus:bg-white focus:border-orange-200 focus:ring-2 focus:ring-orange-100 text-sm w-full transition-all outline-none text-gray-900"
                         />
                         <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 transform -translate-y-1/2" />
                     </div>
