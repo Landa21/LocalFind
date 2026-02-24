@@ -9,7 +9,11 @@ const Recommendations: React.FC = () => {
     const navigate = useNavigate();
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+    const categories = ['All', 'Nature', 'Shopping', 'Cafe', 'Culture', 'Nightlife', 'Wellness', 'Entertainment', 'Food'];
 
     const handleLocationClick = (location: string) => {
         setSelectedLocation(location);
@@ -27,11 +31,13 @@ const Recommendations: React.FC = () => {
         { id: 8, name: 'Local Farmer Market', category: 'Food', rating: 4.9, reviews: 425, location: 'Green Plaza', image: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=400' },
     ];
 
-    const filteredRecommendations = allRecommendations.filter(item =>
-        item.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-        item.category.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-        item.location.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    );
+    const filteredRecommendations = allRecommendations.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+            item.category.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+            item.location.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     return (
         <div className="space-y-8 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -74,9 +80,32 @@ const Recommendations: React.FC = () => {
                             />
                             <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 transform -translate-y-1/2" />
                         </div>
-                        <button className="p-2.5 bg-white border border-gray-100 shadow-sm rounded-xl text-gray-600 hover:text-orange-600 hover:border-orange-100 transition-all">
-                            <Filter size={20} />
-                        </button>
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+                                className={`p-2.5 border shadow-sm rounded-xl transition-all ${isFilterMenuOpen ? 'bg-orange-50 border-orange-200 text-orange-600' : 'bg-white border-gray-100 text-gray-600 hover:text-orange-600 hover:border-orange-100'}`}
+                            >
+                                <Filter size={20} />
+                            </button>
+
+                            {isFilterMenuOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50 mb-1">Filter by Category</div>
+                                    {categories.map((cat) => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => {
+                                                setSelectedCategory(cat);
+                                                setIsFilterMenuOpen(false);
+                                            }}
+                                            className={`w-full text-left px-4 py-2 text-sm transition-colors ${selectedCategory === cat ? 'text-orange-600 font-bold bg-orange-50' : 'text-gray-600 hover:bg-gray-50'}`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
