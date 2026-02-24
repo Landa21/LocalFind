@@ -7,6 +7,8 @@ import { useDebounce } from '../lib/utils';
 const Events: React.FC = () => {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedMonth, setSelectedMonth] = useState('All');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
@@ -26,9 +28,10 @@ const Events: React.FC = () => {
 
     const filteredEvents = allEvents.filter(event => {
         const matchesCategory = selectedCategory === 'All' || event.category === selectedCategory;
+        const matchesMonth = selectedMonth === 'All' || event.date.includes(selectedMonth);
         const matchesSearch = event.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
             event.location.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
+        return matchesCategory && matchesMonth && matchesSearch;
     });
 
     return (
@@ -88,9 +91,32 @@ const Events: React.FC = () => {
                         />
                         <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 transform -translate-y-1/2" />
                     </div>
-                    <button className="p-2.5 bg-gray-50 rounded-xl text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-all">
-                        <Filter size={18} />
-                    </button>
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className={`p-2.5 rounded-xl transition-all border ${isMenuOpen ? 'bg-orange-50 border-orange-200 text-orange-600' : 'bg-gray-50 text-gray-600 border-transparent hover:text-orange-600 hover:bg-orange-50'}`}
+                        >
+                            <Filter size={18} />
+                        </button>
+
+                        {isMenuOpen && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                                <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50 mb-1">Filter by Month</div>
+                                {['All', 'Feb', 'Mar'].map((m) => (
+                                    <button
+                                        key={m}
+                                        onClick={() => {
+                                            setSelectedMonth(m);
+                                            setIsMenuOpen(false);
+                                        }}
+                                        className={`w-full text-left px-4 py-2 text-sm transition-colors ${selectedMonth === m ? 'text-orange-600 font-bold bg-orange-50' : 'text-gray-600 hover:bg-gray-50'}`}
+                                    >
+                                        {m === 'All' ? 'All Months' : `${m} 2026`}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
