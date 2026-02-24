@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, MapPin, Star, MessageCircle } from 'lucide-react';
+import { Heart, MapPin, Star, MessageCircle, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useFavorites } from '../context/FavoritesContext';
 
@@ -14,6 +14,7 @@ interface ReviewCardProps {
     initialLikes?: number;
     className?: string;
     onLocationClick?: (location: string) => void;
+    onDelete?: () => void;
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({
@@ -26,7 +27,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     imageUrl,
     initialLikes = 0,
     className,
-    onLocationClick
+    onLocationClick,
+    onDelete
 }) => {
     const { isFavorite, addFavorite, removeFavorite } = useFavorites();
     const [likes, setLikes] = useState(initialLikes);
@@ -110,10 +112,24 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                         </button>
                     </div>
                 </div>
-                {/* Rating Badge */}
-                <div className="ml-auto bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 border border-white/20 shadow-sm">
-                    <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                    <span className="text-xs font-bold text-white">{rating.toFixed(1)}</span>
+                <div className="ml-auto flex items-center gap-2">
+                    {onDelete && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (window.confirm('Are you sure you want to delete this moment?')) {
+                                    onDelete();
+                                }
+                            }}
+                            className="bg-red-500/20 backdrop-blur-md p-1.5 rounded-lg text-red-100 hover:bg-red-500 hover:text-white transition-all border border-white/20 shadow-sm"
+                        >
+                            <Trash2 size={14} />
+                        </button>
+                    )}
+                    <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 border border-white/20 shadow-sm">
+                        <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                        <span className="text-xs font-bold text-white">{rating.toFixed(1)}</span>
+                    </div>
                 </div>
             </div>
 

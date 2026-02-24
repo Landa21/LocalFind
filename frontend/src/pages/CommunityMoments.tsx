@@ -49,6 +49,10 @@ const CommunityMoments: React.FC = () => {
         setAllMoments([momentToAdd, ...allMoments]);
     };
 
+    const handleDeleteMoment = (id: number | string) => {
+        setAllMoments(allMoments.filter(m => m.id !== id));
+    };
+
     const filteredMoments = allMoments.filter(moment => {
         const matchesSearch = moment.userName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
             moment.location.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
@@ -151,6 +155,7 @@ const CommunityMoments: React.FC = () => {
                                 {...moment}
                                 className="border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-100 transition-all"
                                 onLocationClick={handleLocationClick}
+                                onDelete={moment.userName === 'You' ? () => handleDeleteMoment(moment.id) : undefined}
                             />
                         </div>
                     ))}
