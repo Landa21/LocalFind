@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Heart, MapPin, Star, MessageCircle, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useFavorites } from '../context/FavoritesContext';
+import CommentsModal from './CommentsModal';
 
 interface ReviewCardProps {
     id: number | string;
@@ -32,7 +33,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 }) => {
     const { isFavorite, addFavorite, removeFavorite } = useFavorites();
     const [likes, setLikes] = useState(initialLikes);
-    const [showComments, setShowComments] = useState(false);
+    const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
 
     // Check if the item is already favored
     const isLiked = isFavorite(id);
@@ -62,6 +63,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                 initialLikes
             });
         }
+    };
+
+    const handleAddComment = (text: string) => {
+        setComments([...comments, { id: Date.now(), user: 'You', text }]);
     };
 
     const hasImage = !!imageUrl;
@@ -134,81 +139,39 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             </div>
 
             {/* Content Container (Bottom) */}
-            <div className={cn(
-                "absolute bottom-0 left-0 right-0 m-3 p-4 rounded-xl",
-                "transition-all duration-300 ease-in-out",
-                showComments
-                    ? "bg-black/60 border border-white/20 shadow-lg max-h-[200px]"
-                    : "bg-transparent border-transparent max-h-min",
-                "flex flex-col"
-            )}>
-                {/* Scrollable Container with Hidden Scrollbar */}
-                <div className="overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                    <style>{`
-                        .overflow-y-auto::-webkit-scrollbar {
-                            display: none;
-                        }
-                    `}</style>
+            <div className="absolute bottom-0 left-0 right-0 m-3 p-4 rounded-xl flex flex-col">
+                <p className="text-white text-sm font-medium drop-shadow-md mb-3">
+                    "{caption}"
+                </p>
 
-                    <p className="text-white text-sm font-medium drop-shadow-md mb-3">
-                        "{caption}"
-                    </p>
-
-                    <div className={cn(
-                        "flex items-center gap-4 pt-3 transition-colors",
-                        showComments ? "border-t border-white/20" : "border-transparent"
-                    )}>
-                        <button
-                            onClick={handleLike}
-                            className={cn(
-                                "flex items-center gap-1.5 text-xs font-bold transition-colors",
-                                isLiked ? "text-red-400" : "text-white hover:text-red-400"
-                            )}
-                        >
-                            <Heart className={cn("w-4 h-4", isLiked ? "fill-current" : "")} />
-                            {likes}
-                        </button>
-                        <button
-                            onClick={() => setShowComments(!showComments)}
-                            className={cn(
-                                "flex items-center gap-1.5 text-xs font-bold transition-colors",
-                                showComments ? "text-orange-200" : "text-white hover:text-orange-200"
-                            )}
-                        >
-                            <MessageCircle className="w-4 h-4" />
-                            {comments.length}
-                        </button>
-                    </div>
-
-                    {/* Comments Section (Expandable) */}
-                    {showComments && (
-                        <div className="mt-3 pt-3 border-t border-white/20 space-y-2 animate-in slide-in-from-bottom-2 fade-in duration-300">
-                            {comments.map((comment: { id: number; user: string; text: string }) => (
-                                <div key={comment.id} className="flex gap-2 items-start text-xs text-white/90">
-                                    <span className="font-bold text-white">{comment.user}:</span>
-                                    <span>{comment.text}</span>
-                                </div>
-                            ))}
-                            <div className="pt-2">
-                                <input
-                                    type="text"
-                                    placeholder="Add a comment..."
-                                    className="w-full bg-white/20 border-none rounded-full px-3 py-1.5 text-xs text-white placeholder:text-white/60 focus:ring-1 focus:ring-white/50 focus:outline-none"
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            const target = e.target as HTMLInputElement;
-                                            if (target.value.trim()) {
-                                                setComments([...comments, { id: Date.now(), user: 'You', text: target.value }]);
-                                                target.value = '';
-                                            }
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={handleLike}
+                        className={cn(
+                            "flex items-center gap-1.5 text-xs font-bold transition-colors",
+                            isLiked ? "text-red-400" : "text-white hover:text-red-400"
+                        )}
+                    >
+                        <Heart className={cn("w-4 h-4", isLiked ? "fill-current" : "")} />
+                        {likes}
+                    </button>
+                    <button
+                        onClick={() => setIsCommentsModalOpen(true)}
+                        className="flex items-center gap-1.5 text-xs font-bold text-white hover:text-orange-200 transition-colors"
+                    >
+                        <MessageCircle className="w-4 h-4" />
+                        {comments.length}
+                    </button>
                 </div>
             </div>
+
+            <CommentsModal
+                isOpen={isCommentsModalOpen}
+                onClose={() => setIsCommentsModalOpen(false)}
+                comments={comments}
+                onAddComment={handleAddComment}
+                locationName={location}
+            />
         </div>
     );
 };
