@@ -9,6 +9,8 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider, appleProvider } from '../config/firebase';
 
+const BACKEND_URL = 'http://localhost:3001';
+
 interface AuthContextType {
     user: User | null;
     loading: boolean;
@@ -27,8 +29,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             console.log("Auth state changed:", currentUser ? "User logged in" : "No user");
+
+            if (currentUser) {
+                // If we have a user from Firebase, sync with backend session
+                try {
+                    const idToken = await currentUser.getIdToken();
+                    await fetch(`${BACKEND_URL}/api/sessionLogin`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ idToken }),
+                    });
+                } catch (err) {
+                    console.error("Failed to sync session with backend:", err);
+                }
+            }
+
             setUser(currentUser);
             setLoading(false);
         });
@@ -57,6 +74,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setError(null);
         try {
             await signOut(auth);
+            await fetch(`${BACKEND_URL}/api/sessionLogout`, {
+                method: 'POST',
+            });
             sessionStorage.removeItem('welcomeShown');
         } catch (err: any) {
             setError(err.message);

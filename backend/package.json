@@ -4,9 +4,13 @@
   "description": "Backend scripts for LocalFind",
   "main": "seeddata.js",
   "scripts": {
-    "seed": "node seeddata.js"
+    "seed": "node seeddata.js",
+    "start": "node server.js"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "firebase-admin": "^11.5.0"
   },
   "author": "",
