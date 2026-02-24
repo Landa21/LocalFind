@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Recommendations from './pages/Recommendations';
 import Events from './pages/Events';
+import CommunityMoments from './pages/CommunityMoments';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/community-moments" element={<CommunityMoments />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/settings" element={<div className="p-8">Settings Coming Soon</div>} />
           </Route>

@@ -147,7 +147,7 @@ const Dashboard: React.FC = () => {
                     <section>
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="font-serif text-xl font-bold text-gray-900">Community Moments</h2>
-                            <button className="text-sm font-medium text-orange-600 hover:text-orange-700">View More</button>
+                            <Link to="/community-moments" className="text-sm font-medium text-orange-600 hover:text-orange-700">View More</Link>
                         </div>
                         <div className="flex items-center justify-center w-full">
                             <CardStack<ReviewStackItem>
