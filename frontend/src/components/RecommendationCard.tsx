@@ -9,6 +9,7 @@ interface RecommendationCardProps {
     location: string;
     image: string;
     onLocationClick?: (location: string) => void;
+    onClick?: () => void;
 }
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({
@@ -18,10 +19,14 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
     reviews,
     location,
     image,
-    onLocationClick
+    onLocationClick,
+    onClick
 }) => {
     return (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md transition-all">
+        <div
+            onClick={onClick}
+            className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group hover:shadow-md transition-all cursor-pointer"
+        >
             <div className="h-32 bg-gray-100 relative overflow-hidden">
                 <img
                     src={image}
@@ -37,7 +42,10 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                 <div className="text-xs text-orange-600 font-medium mb-1">{category}</div>
                 <h4 className="font-bold text-gray-900 mb-1 truncate">{name}</h4>
                 <button
-                    onClick={() => onLocationClick?.(location)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onLocationClick?.(location);
+                    }}
                     className="flex items-center text-xs text-gray-500 mb-2 hover:text-orange-600 transition-colors group/loc"
                 >
                     <MapPin className="w-3 h-3 mr-1 group-hover/loc:text-orange-500" />

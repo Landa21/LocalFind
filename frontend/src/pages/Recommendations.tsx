@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Filter, Search } from 'lucide-react';
 import RecommendationCard from '../components/RecommendationCard';
 import MapPopup from '../components/MapPopup';
+import PlaceDetailsModal, { type Place } from '../components/PlaceDetailsModal';
 import { useDebounce } from '../lib/utils';
 
 const Recommendations: React.FC = () => {
@@ -11,6 +12,8 @@ const Recommendations: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+    const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
     const categories = ['All', 'Nature', 'Shopping', 'Cafe', 'Culture', 'Nightlife', 'Wellness', 'Entertainment', 'Food'];
@@ -20,15 +23,110 @@ const Recommendations: React.FC = () => {
     };
 
     // Mock Data (Ideally this would come from an API/Context)
-    const allRecommendations = [
-        { id: 1, name: 'The Hidden Garden', category: 'Nature', rating: 4.8, reviews: 124, location: 'City Center', image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=400' },
-        { id: 2, name: 'Retro Vinyl Shop', category: 'Shopping', rating: 4.9, reviews: 85, location: 'East Side', image: 'https://images.unsplash.com/photo-1532452119098-a3650b3c46d3?auto=format&fit=crop&q=80&w=400' },
-        { id: 3, name: 'Artisan Coffee Co.', category: 'Cafe', rating: 4.7, reviews: 203, location: 'Downtown', image: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=400' },
-        { id: 4, name: 'Midnight Library', category: 'Culture', rating: 4.6, reviews: 92, location: 'Old Town', image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=400' },
-        { id: 5, name: 'Skyline Terrace', category: 'Nightlife', rating: 4.9, reviews: 312, location: 'Harbor Front', image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=400' },
-        { id: 6, name: 'Ocean Mist Spa', category: 'Wellness', rating: 4.8, reviews: 156, location: 'Beach Road', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400' },
-        { id: 7, name: 'Vintage Cinema', category: 'Entertainment', rating: 4.7, reviews: 118, location: 'Cinema District', image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=400' },
-        { id: 8, name: 'Local Farmer Market', category: 'Food', rating: 4.9, reviews: 425, location: 'Green Plaza', image: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=400' },
+    const allRecommendations: Place[] = [
+        {
+            id: 1,
+            name: 'The Hidden Garden',
+            category: 'Nature',
+            rating: 4.8,
+            reviews: 124,
+            location: 'City Center',
+            image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=400',
+            description: 'A sanctuary of peace in the heart of the city. This secret garden features rare botanical specimens and cozy nooks for reading.',
+            address: '12 Secret Lane, City Center',
+            website: 'https://garden.local',
+            hours: '08:00 - 18:00',
+            phone: '+27 12 345 6789'
+        },
+        {
+            id: 2,
+            name: 'Retro Vinyl Shop',
+            category: 'Shopping',
+            rating: 4.9,
+            reviews: 85,
+            location: 'East Side',
+            image: 'https://images.unsplash.com/photo-1532452119098-a3650b3c46d3?auto=format&fit=crop&q=80&w=400',
+            description: 'A treasure trove for music lovers. From rare jazz records to the latest indie releases, find your next favorite sound here.',
+            address: '45 Groove St, East Side',
+            website: 'https://vinyl.local',
+            hours: '10:00 - 20:00',
+            phone: '+27 11 222 3333'
+        },
+        {
+            id: 3,
+            name: 'Artisan Coffee Co.',
+            category: 'Cafe',
+            rating: 4.7,
+            reviews: 203,
+            location: 'Downtown',
+            image: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=400',
+            description: 'Where every cup is a masterpiece. We slow-roast our beans in-house to bring you the most authentic coffee experience in town.',
+            address: '88 Caffeine Way, Downtown',
+            website: 'https://artisan.coffee',
+            hours: '07:00 - 17:00'
+        },
+        {
+            id: 4,
+            name: 'Midnight Library',
+            category: 'Culture',
+            rating: 4.6,
+            reviews: 92,
+            location: 'Old Town',
+            image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=400',
+            description: 'Books and beyond. Our extensive collection and 24/7 access make us the perfect retreat for late-night thinkers.',
+            address: '32 Wisdom Ave, Old Town',
+            hours: 'Open 24/7'
+        },
+        {
+            id: 5,
+            name: 'Skyline Terrace',
+            category: 'Nightlife',
+            rating: 4.9,
+            reviews: 312,
+            location: 'Harbor Front',
+            image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=400',
+            description: 'The city at your feet. Enjoy premium cocktails and panoramic views from our award-winning rooftop terrace.',
+            address: '100 Height Towers, Harbor Front',
+            website: 'https://skyline.local',
+            hours: '18:00 - 02:00'
+        },
+        {
+            id: 6,
+            name: 'Ocean Mist Spa',
+            category: 'Wellness',
+            rating: 4.8,
+            reviews: 156,
+            location: 'Beach Road',
+            image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400',
+            description: 'Rejuvenate your soul with treatments inspired by the sea. Our luxury spa offers full-body relaxation with a view of the waves.',
+            address: '15 Shoreline Dr, Beach Road',
+            hours: '09:00 - 21:00'
+        },
+        {
+            id: 7,
+            name: 'Vintage Cinema',
+            category: 'Entertainment',
+            rating: 4.7,
+            reviews: 118,
+            location: 'Cinema District',
+            image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=400',
+            description: 'Experience the magic of film as it used to be. We screen classic masterpieces in a beautifully restored 1920s theater.',
+            address: '22 Reel Road, Cinema District',
+            website: 'https://vintagecinema.local',
+            hours: '14:00 - 23:00'
+        },
+        {
+            id: 8,
+            name: 'Local Farmer Market',
+            category: 'Food',
+            rating: 4.9,
+            reviews: 425,
+            location: 'Green Plaza',
+            image: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=400',
+            description: 'The freshest produce from the best local growers. Support our community and taste the difference of farm-to-table food.',
+            address: 'Green Plaza Square',
+            hours: 'Sat-Sun: 08:00 - 14:00'
+        },
     ];
 
     const filteredRecommendations = allRecommendations.filter(item => {
@@ -45,6 +143,12 @@ const Recommendations: React.FC = () => {
                 isOpen={!!selectedLocation}
                 onClose={() => setSelectedLocation(null)}
                 locationName={selectedLocation || ''}
+            />
+
+            <PlaceDetailsModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                place={selectedPlace}
             />
 
             {/* Back Button & Header */}
@@ -118,6 +222,10 @@ const Recommendations: React.FC = () => {
                             <RecommendationCard
                                 {...place}
                                 onLocationClick={handleLocationClick}
+                                onClick={() => {
+                                    setSelectedPlace(place);
+                                    setIsModalOpen(true);
+                                }}
                             />
                         </div>
                     ))}
