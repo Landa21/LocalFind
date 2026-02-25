@@ -34,6 +34,7 @@ const Dashboard: React.FC = () => {
         { id: 'cultural', label: 'Cultural' },
     ];
     const [selectedMood, setSelectedMood] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Mock Data
     const recommendations: Place[] = [
@@ -106,19 +107,36 @@ const Dashboard: React.FC = () => {
 
     // Filtering Logic
     const filteredRecommendations = useMemo(() => {
-        if (selectedMood === 'all') return recommendations;
-        return recommendations.filter(item => item.category.toLowerCase() === selectedMood.toLowerCase());
-    }, [selectedMood]);
+        return recommendations.filter(item => {
+            const matchesMood = selectedMood === 'all' || item.category.toLowerCase() === selectedMood.toLowerCase();
+            const matchesSearch = searchQuery === '' ||
+                item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (item.description?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                item.location.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesMood && matchesSearch;
+        });
+    }, [selectedMood, searchQuery]);
 
     const filteredEvents = useMemo(() => {
-        if (selectedMood === 'all') return upcomingEvents;
-        return upcomingEvents.filter(item => item.category.toLowerCase() === selectedMood.toLowerCase());
-    }, [selectedMood]);
+        return upcomingEvents.filter(item => {
+            const matchesMood = selectedMood === 'all' || item.category.toLowerCase() === selectedMood.toLowerCase();
+            const matchesSearch = searchQuery === '' ||
+                item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.location.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesMood && matchesSearch;
+        });
+    }, [selectedMood, searchQuery]);
 
     const filteredReviews = useMemo(() => {
-        if (selectedMood === 'all') return reviews;
-        return reviews.filter(item => item.category.toLowerCase() === selectedMood.toLowerCase());
-    }, [selectedMood]);
+        return reviews.filter(item => {
+            const matchesMood = selectedMood === 'all' || item.category.toLowerCase() === selectedMood.toLowerCase();
+            const matchesSearch = searchQuery === '' ||
+                item.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.caption.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.location.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesMood && matchesSearch;
+        });
+    }, [selectedMood, searchQuery]);
 
     // Extend CardStackItem to include the review object
     type ReviewStackItem = CardStackItem & { review: typeof reviews[0] };
@@ -167,7 +185,9 @@ const Dashboard: React.FC = () => {
                         <input
                             type="text"
                             placeholder="Search places..."
-                            className="pl-12 pr-4 py-3.5 rounded-2xl bg-white border-0 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-100 focus:shadow-md w-full transition-all"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-12 pr-4 py-3.5 rounded-2xl bg-white border-0 shadow-sm text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-100 focus:shadow-md w-full transition-all"
                         />
                         <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
                     </div>
