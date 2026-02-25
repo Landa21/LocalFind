@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import {
     type User,
     onAuthStateChanged,
@@ -52,6 +52,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
         return unsubscribe;
     }, []);
+
+    const timeoutRef = useRef<any>(null);
+    const INACTIVITY_TIMEOUT = 4 * 60 * 60 * 1000; // 4 hours
+
+    const resetTimer = useCallback(() => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        if (user) {
+            timeoutRef.current = setTimeout(() => {
+                console.log("Inactivity detected, logging out...");
+                logout();
+            }, INACTIVITY_TIMEOUT);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (user) {
+            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+
+            const handleEvent = () => resetTimer();
+
+            events.forEach(event => {
+                window.addEventListener(event, handleEvent);
+            });
+
+            // Initialize timer
+            resetTimer();
+
+            return () => {
+                events.forEach(event => {
+                    window.removeEventListener(event, handleEvent);
+                });
+                if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current);
+                }
+            };
+        } else {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        }
+    }, [user, resetTimer]);
 
     const signInWithGoogle = async () => {
         setError(null);
