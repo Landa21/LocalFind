@@ -18,11 +18,12 @@ import { toast } from 'react-hot-toast';
 import { auth, googleProvider, appleProvider } from '../config/firebase';
 import {
     linkWithPopup,
-    unlink
+    unlink,
+    deleteUser
 } from 'firebase/auth';
 
 const Settings: React.FC = () => {
-    const { } = useAuth();
+    const { logout } = useAuth();
     const [activeSection, setActiveSection] = useState('preferences');
 
     const sections = [
@@ -32,6 +33,27 @@ const Settings: React.FC = () => {
         { id: 'appearance', label: 'Appearance', icon: Palette },
         { id: 'privacy', label: 'Privacy & Data', icon: Shield },
     ];
+
+    const handleDeleteAccount = async () => {
+        if (!auth.currentUser) {
+            toast.error('No user is logged in.');
+            return;
+        }
+
+        if (window.confirm('Are you sure you want to delete your account? This action is permanent and cannot be undone.')) {
+            try {
+                await deleteUser(auth.currentUser);
+                toast.success('Account deleted successfully.');
+                await logout(); // Ensure user is logged out after deletion
+            } catch (error: any) {
+                if (error.code === 'auth/requires-recent-login') {
+                    toast.error('Please re-authenticate to delete your account.');
+                } else {
+                    toast.error(error.message);
+                }
+            }
+        }
+    };
 
     const handleLinkAccount = async (providerName: 'google' | 'apple') => {
         if (!auth.currentUser) return;
@@ -237,6 +259,50 @@ const Settings: React.FC = () => {
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {/* Danger Zone */}
+                                            <div className="mt-12 pt-10 border-t border-gray-100">
+                                                <h4 className="text-sm font-bold text-red-600 mb-6 px-2 uppercase tracking-wider">Danger Zone</h4>
+                                                <div className="p-8 rounded-[32px] bg-red-50 border border-red-100">
+                                                    <div className="flex items-start gap-4 mb-6">
+                                                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm text-red-500">
+                                                            <Trash2 className="w-6 h-6" />
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-bold text-red-900 text-lg">Deactivate Account</h4>
+                                                            <p className="text-sm text-red-700 mt-1 leading-relaxed">
+                                                                Temporarily disable your profile. You can reactivate it at any time by signing back in.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => toast.error('Account deactivation is currently being processed. (Mock)')}
+                                                        className="w-full py-4 bg-white text-red-600 font-bold rounded-2xl border border-red-200 hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                                                    >
+                                                        Confirm Deactivation
+                                                    </button>
+                                                </div>
+
+                                                <div className="p-8 rounded-[32px] bg-red-50 border border-red-100 mt-6">
+                                                    <div className="flex items-start gap-4 mb-6">
+                                                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm text-red-500">
+                                                            <Trash2 className="w-6 h-6" />
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-bold text-red-900 text-lg">Delete Account</h4>
+                                                            <p className="text-sm text-red-700 mt-1 leading-relaxed">
+                                                                Permanently delete your account and all associated data. This action cannot be undone.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={handleDeleteAccount}
+                                                        className="w-full py-4 bg-red-600 text-white font-bold rounded-2xl hover:bg-red-700 transition-all shadow-sm"
+                                                    >
+                                                        Delete Permanently
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </section>
                                 </div>
@@ -312,21 +378,9 @@ const Settings: React.FC = () => {
                             {activeSection === 'privacy' && (
                                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                                     <h3 className="text-xl font-bold text-gray-900 mb-6">Privacy & Data</h3>
-                                    <div className="p-8 rounded-[32px] bg-red-50 border border-red-100 mt-8">
-                                        <div className="flex items-start gap-4 mb-6">
-                                            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm text-red-500">
-                                                <Trash2 className="w-6 h-6" />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-red-900 text-lg">Deactivate Account</h4>
-                                                <p className="text-sm text-red-700 mt-1 leading-relaxed">
-                                                    Temporarily disable your profile. You can reactivate it at any time by signing back in.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <button className="w-full py-4 bg-white text-red-600 font-bold rounded-2xl border border-red-200 hover:bg-red-600 hover:text-white transition-all shadow-sm">
-                                            Confirm Deactivation
-                                        </button>
+                                    <div className="p-6 rounded-3xl bg-gray-50 border border-gray-100 text-center py-12">
+                                        <Shield className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                                        <p className="text-gray-500 text-sm">Privacy settings are being optimized. Check back soon!</p>
                                     </div>
                                 </div>
                             )}
