@@ -318,39 +318,77 @@ const Settings: React.FC = () => {
 
                             {activeSection === 'notifications' && (
                                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-6">Notifications</h3>
-                                    <div className="space-y-6">
-                                        <div className="flex items-center justify-between p-2">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600">
-                                                    <Mail className="w-6 h-6" />
+                                    <section>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-6">Notification Settings</h3>
+
+                                        {/* Push Notifications Section */}
+                                        <div className="mb-10">
+                                            <div className="flex items-center gap-3 mb-6 px-2">
+                                                <div className="w-10 h-10 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 shadow-sm">
+                                                    <Smartphone className="w-5 h-5" />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-gray-900">Email Notifications</p>
-                                                    <p className="text-sm text-gray-500">Personalized trip ideas & product updates</p>
+                                                    <h4 className="font-bold text-gray-900">Push Notifications</h4>
+                                                    <p className="text-xs text-gray-500">Alerts sent directly to your device</p>
                                                 </div>
                                             </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" defaultChecked className="sr-only peer" />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
-                                            </label>
+                                            <div className="bg-gray-50 rounded-[32px] border border-gray-100 overflow-hidden">
+                                                <div className="divide-y divide-gray-100">
+                                                    {[
+                                                        { id: 'near_me', label: 'New hidden gems near me', desc: 'Get alerted when someone finds a gem in your current city' },
+                                                        { id: 'likes', label: 'Someone liked my review', desc: 'Notifications for engagement on your contributions' },
+                                                        { id: 'comments', label: 'Someone commented', desc: 'Stay updated on conversations you are part of' },
+                                                        { id: 'friend_activity', label: 'Friend activity', desc: 'See what your friends are discovering' },
+                                                        { id: 'weekly_reminders', label: 'Weekly discovery reminder', desc: 'A weekly recap of the best spots to visit' }
+                                                    ].map((item) => (
+                                                        <div key={item.id} className="p-6 flex items-center justify-between hover:bg-white/50 transition-colors group">
+                                                            <div className="pr-4">
+                                                                <p className="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{item.label}</p>
+                                                                <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                                                            </div>
+                                                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                                                                <input type="checkbox" defaultChecked className="sr-only peer" />
+                                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="flex items-center justify-between p-2">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-                                                    <Smartphone className="w-6 h-6" />
+
+                                        {/* Email Notifications Section */}
+                                        <div>
+                                            <div className="flex items-center gap-3 mb-6 px-2">
+                                                <div className="w-10 h-10 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 shadow-sm">
+                                                    <Mail className="w-5 h-5" />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-gray-900">Push Notifications</p>
-                                                    <p className="text-sm text-gray-500">Alerts for new events in your area</p>
+                                                    <h4 className="font-bold text-gray-900">Email Notifications</h4>
+                                                    <p className="text-xs text-gray-500">Updates sent to your primary email address</p>
                                                 </div>
                                             </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" defaultChecked className="sr-only peer" />
-                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
-                                            </label>
+                                            <div className="bg-gray-50 rounded-[32px] border border-gray-100 overflow-hidden">
+                                                <div className="divide-y divide-gray-100">
+                                                    {[
+                                                        { id: 'monthly_digest', label: 'Monthly digest', desc: 'A curated summary of the best gems and reviews from the past month' },
+                                                        { id: 'security_alerts', label: 'Security alerts', desc: 'Important notifications about your account security' },
+                                                        { id: 'product_updates', label: 'Product updates', desc: 'New features and improvements to LocalFind' }
+                                                    ].map((item) => (
+                                                        <div key={item.id} className="p-6 flex items-center justify-between hover:bg-white/50 transition-colors group">
+                                                            <div className="pr-4">
+                                                                <p className="text-sm font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{item.label}</p>
+                                                                <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
+                                                            </div>
+                                                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                                                                <input type="checkbox" defaultChecked={item.id === 'security_alerts'} className="sr-only peer" />
+                                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </section>
                                 </div>
                             )}
 
