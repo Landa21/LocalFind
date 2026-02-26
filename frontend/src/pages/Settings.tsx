@@ -11,7 +11,14 @@ import {
     Moon,
     Sun,
     Monitor,
-    Trash2
+    Trash2,
+    Eye,
+    UserCheck,
+    MapPin,
+    Star,
+    Ghost,
+    Clock,
+    Bookmark
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -25,6 +32,7 @@ import {
 const Settings: React.FC = () => {
     const { logout } = useAuth();
     const [activeSection, setActiveSection] = useState('preferences');
+    const [profileVisibility, setProfileVisibility] = useState('public');
 
     const sections = [
         { id: 'preferences', label: 'Preferences', icon: Globe },
@@ -377,11 +385,107 @@ const Settings: React.FC = () => {
 
                             {activeSection === 'privacy' && (
                                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-6">Privacy & Data</h3>
-                                    <div className="p-6 rounded-3xl bg-gray-50 border border-gray-100 text-center py-12">
-                                        <Shield className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                                        <p className="text-gray-500 text-sm">Privacy settings are being optimized. Check back soon!</p>
-                                    </div>
+                                    <section>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-6">Privacy & Data</h3>
+
+                                        {/* Profile Visibility */}
+                                        <div className="p-8 rounded-[32px] bg-gray-50 border border-gray-100 mb-8">
+                                            <div className="flex items-center justify-between mb-8">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm text-gray-900">
+                                                        <Eye className="w-6 h-6" />
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-bold text-gray-900">Profile Visibility</h4>
+                                                        <p className="text-sm text-gray-500">Control who can see your activity and profile details.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex bg-white p-1 rounded-2xl border border-gray-100 shadow-sm">
+                                                    <button
+                                                        onClick={() => setProfileVisibility('public')}
+                                                        className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${profileVisibility === 'public' ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                                                    >
+                                                        Public
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setProfileVisibility('private')}
+                                                        className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${profileVisibility === 'private' ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                                                    >
+                                                        Private
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                {[
+                                                    { id: 'saved', label: 'Show my saved places publicly', icon: Bookmark },
+                                                    { id: 'visited', label: 'Show my visited places', icon: MapPin },
+                                                    { id: 'reviews', label: 'Show my reviews publicly', icon: Star },
+                                                    { id: 'followers', label: 'Allow others to see my followers', icon: UserCheck },
+                                                ].map((item) => (
+                                                    <div key={item.id} className="flex items-center justify-between group">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-gray-400 group-hover:text-orange-500 transition-colors">
+                                                                <item.icon className="w-5 h-5" />
+                                                            </div>
+                                                            <span className="text-sm font-medium text-gray-700">{item.label}</span>
+                                                        </div>
+                                                        <label className="relative inline-flex items-center cursor-pointer">
+                                                            <input type="checkbox" defaultChecked className="sr-only peer" />
+                                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Activity Privacy */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                            <div className="p-6 rounded-3xl bg-gray-50 border border-gray-100 group">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-gray-400 group-hover:text-blue-500 transition-colors">
+                                                        <Ghost className="w-5 h-5" />
+                                                    </div>
+                                                    <label className="relative inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" className="sr-only peer" />
+                                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                                                    </label>
+                                                </div>
+                                                <h4 className="font-bold text-gray-900 mb-1">Incognito Mode</h4>
+                                                <p className="text-xs text-gray-500">Browse without appearing active to your followers.</p>
+                                            </div>
+
+                                            <div className="p-6 rounded-3xl bg-gray-50 border border-gray-100 group">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-gray-400 group-hover:text-purple-500 transition-colors">
+                                                        <Clock className="w-5 h-5" />
+                                                    </div>
+                                                    <label className="relative inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" className="sr-only peer" />
+                                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                                                    </label>
+                                                </div>
+                                                <h4 className="font-bold text-gray-900 mb-1">Hide Check-in Timestamps</h4>
+                                                <p className="text-xs text-gray-500">Remove specific times from your public check-ins.</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-6 rounded-3xl bg-gray-50 border border-gray-100 flex items-center justify-between group">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-gray-400 group-hover:text-green-500 transition-colors">
+                                                    <Shield className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-gray-900 text-sm">Anonymous Gem Submissions</h4>
+                                                    <p className="text-xs text-gray-500">Your name won't be visible on hidden gems you contribute.</p>
+                                                </div>
+                                            </div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" className="sr-only peer" />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                                            </label>
+                                        </div>
+                                    </section>
                                 </div>
                             )}
                         </div>
