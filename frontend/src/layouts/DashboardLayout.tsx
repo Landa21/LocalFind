@@ -2,7 +2,6 @@ import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
-    Settings,
     Compass,
     Heart,
     Bell
@@ -17,7 +16,6 @@ const DashboardLayout: React.FC = () => {
     const menuItems = [
         { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
         { path: '/favorites', label: 'Favorites', icon: Heart },
-        { path: '/settings', label: 'Settings', icon: Settings },
     ];
 
     return (
