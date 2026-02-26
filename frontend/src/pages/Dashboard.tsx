@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
     }));
 
     return (
-        <div className="space-y-8 pb-12">
+        <div className="space-y-8 pb-12 transition-colors duration-300">
             {showWelcome && (
                 <WelcomePopup
                     userName={user?.displayName?.split(' ')[0] || 'Friend'}
@@ -176,10 +176,10 @@ const Dashboard: React.FC = () => {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-gray-900">
+                    <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white transition-colors">
                         Welcome back, {user?.displayName?.split(' ')[0] || 'Explorer'}!
                     </h1>
-                    <p className="text-gray-500 mt-1 mb-6">Discover what's happening around you.</p>
+                    <p className="text-gray-500 dark:text-gray-400 mt-1 mb-6 transition-colors">Discover what's happening around you.</p>
 
                     <div className="relative group max-w-md">
                         <input
@@ -187,7 +187,7 @@ const Dashboard: React.FC = () => {
                             placeholder="Search places..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-12 pr-4 py-3.5 rounded-2xl bg-white border-0 shadow-sm text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-100 focus:shadow-md w-full transition-all"
+                            className="pl-12 pr-4 py-3.5 rounded-2xl bg-white dark:bg-gray-800 border-0 dark:border dark:border-gray-700 shadow-sm text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-100 dark:focus:ring-orange-900/20 focus:shadow-md w-full transition-all"
                         />
                         <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
                     </div>
@@ -202,8 +202,8 @@ const Dashboard: React.FC = () => {
                                     className={`
                                         whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200
                                         ${selectedMood === mood.id
-                                            ? 'bg-gray-900 text-white shadow-md transform scale-105'
-                                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-100 hover:border-gray-200'
+                                            ? 'bg-gray-900 dark:bg-orange-600 text-white shadow-md transform scale-105'
+                                            : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-orange-50/10 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600'
                                         }
                                     `}
                                 >
@@ -222,11 +222,11 @@ const Dashboard: React.FC = () => {
                     {/* Recommendations */}
                     <section>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="font-serif text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <h2 className="font-serif text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2 transition-colors">
                                 <Sparkles className="w-5 h-5 text-orange-500" />
                                 Recommended for You
                             </h2>
-                            <Link to="/recommendations" className="text-sm font-medium text-orange-600 hover:text-orange-700">See All</Link>
+                            <Link to="/recommendations" className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">See All</Link>
                         </div>
                         {filteredRecommendations.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -243,8 +243,8 @@ const Dashboard: React.FC = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-12 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                                <p className="text-gray-500">No recommendations found for this mood.</p>
+                            <div className="py-12 text-center bg-white dark:bg-gray-800/50 rounded-3xl border border-dashed border-gray-200 dark:border-gray-700 transition-colors">
+                                <p className="text-gray-500 dark:text-gray-400">No recommendations found for this mood.</p>
                             </div>
                         )}
                     </section>
@@ -252,27 +252,29 @@ const Dashboard: React.FC = () => {
                     {/* Community Feed / Reviews */}
                     <section>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="font-serif text-xl font-bold text-gray-900">Community Moments</h2>
-                            <Link to="/community-moments" className="text-sm font-medium text-orange-600 hover:text-orange-700">View More</Link>
+                            <h2 className="font-serif text-xl font-bold text-gray-900 dark:text-white transition-colors">Community Moments</h2>
+                            <Link to="/community-moments" className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">View More</Link>
                         </div>
                         <div className="flex items-center justify-center w-full">
                             {stackItems.length > 0 ? (
-                                <CardStack<ReviewStackItem>
-                                    items={stackItems}
-                                    cardWidth={400}
-                                    cardHeight={220}
-                                    renderCard={(item) => (
-                                        <ReviewCard
-                                            {...item.review}
-                                            id={item.review.id}
-                                            className="shadow-none border-none w-full h-full"
-                                            onLocationClick={handleLocationClick}
-                                        />
-                                    )}
-                                />
+                                <div className="dark:card-stack-dark">
+                                    <CardStack<ReviewStackItem>
+                                        items={stackItems}
+                                        cardWidth={400}
+                                        cardHeight={220}
+                                        renderCard={(item) => (
+                                            <ReviewCard
+                                                {...item.review}
+                                                id={item.review.id}
+                                                className="shadow-none border-none w-full h-full"
+                                                onLocationClick={handleLocationClick}
+                                            />
+                                        )}
+                                    />
+                                </div>
                             ) : (
-                                <div className="py-8 w-full text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                                    <p className="text-gray-500">No moments shared for this mood yet.</p>
+                                <div className="py-8 w-full text-center bg-white dark:bg-gray-800/50 rounded-3xl border border-dashed border-gray-200 dark:border-gray-700 transition-colors">
+                                    <p className="text-gray-500 dark:text-gray-400">No moments shared for this mood yet.</p>
                                 </div>
                             )}
                         </div>
@@ -284,10 +286,10 @@ const Dashboard: React.FC = () => {
                 <div className="space-y-8">
 
                     {/* Upcoming Events */}
-                    <section className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+                    <section className="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="font-bold text-gray-900 text-lg">Upcoming Events</h3>
-                            <Link to="/events" className="text-xs font-bold text-orange-600 uppercase tracking-wide hover:text-orange-700">View All</Link>
+                            <h3 className="font-bold text-gray-900 dark:text-white text-lg transition-colors">Upcoming Events</h3>
+                            <Link to="/events" className="text-xs font-bold text-orange-600 uppercase tracking-wide hover:text-orange-700 transition-colors">View All</Link>
                         </div>
                         {filteredEvents.length > 0 ? (
                             <div className="space-y-4">
@@ -296,11 +298,11 @@ const Dashboard: React.FC = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                                <p className="text-gray-400 text-sm">No events found.</p>
+                            <div className="py-8 text-center bg-white dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 transition-colors">
+                                <p className="text-gray-400 dark:text-gray-500 text-sm">No events found.</p>
                             </div>
                         )}
-                        <button className="w-full mt-6 py-2.5 bg-gray-50 text-gray-600 font-medium rounded-xl hover:bg-gray-100 transition-colors text-sm">
+                        <button className="w-full mt-6 py-2.5 bg-white dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 font-medium rounded-xl hover:bg-orange-50/20 dark:hover:bg-gray-700 transition-colors text-sm border border-transparent dark:border-gray-700">
                             Find More Events
                         </button>
                     </section>
