@@ -15,6 +15,8 @@ import Recommendations from './pages/Recommendations';
 import Events from './pages/Events';
 import CommunityMoments from './pages/CommunityMoments';
 
+import Settings from './pages/Settings';
+
 function App() {
   return (
     <FavoritesProvider>
@@ -38,7 +40,7 @@ function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/community-moments" element={<CommunityMoments />} />
             <Route path="/favorites" element={<Favorites />} />
-            <Route path="/settings" element={<div className="p-8">Settings Coming Soon</div>} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
 
         </Routes>

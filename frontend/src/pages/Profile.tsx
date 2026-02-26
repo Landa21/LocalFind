@@ -7,6 +7,7 @@ const Profile: React.FC = () => {
     const { user } = useAuth();
     const [displayName, setDisplayName] = useState(user?.displayName || '');
     const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
+    const [bio, setBio] = useState('');
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
     const [imageError, setImageError] = useState(false);
@@ -104,6 +105,17 @@ const Profile: React.FC = () => {
                                     value={user?.email || ''}
                                     disabled
                                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                                <textarea
+                                    rows={4}
+                                    value={bio}
+                                    onChange={(e) => setBio(e.target.value)}
+                                    placeholder="Tell us about yourself..."
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-100 focus:border-orange-500 outline-none transition-all text-gray-900 resize-none"
                                 />
                             </div>
                         </div>
