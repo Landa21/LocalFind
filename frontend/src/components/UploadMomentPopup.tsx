@@ -18,7 +18,7 @@ interface UploadMomentPopupProps {
 const UploadMomentPopup: React.FC<UploadMomentPopupProps> = ({ isOpen, onClose, onShare }) => {
     const [location, setLocation] = useState('');
     const [caption, setCaption] = useState('');
-    const [rating, setRating] = useState(5);
+    const [rating, setRating] = useState(0);
     const [category, setCategory] = useState('Food');
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,7 +52,7 @@ const UploadMomentPopup: React.FC<UploadMomentPopupProps> = ({ isOpen, onClose, 
         // Reset and close
         setLocation('');
         setCaption('');
-        setRating(5);
+        setRating(0);
         setCategory('Food');
         setImagePreview(null);
         onClose();
@@ -160,7 +160,7 @@ const UploadMomentPopup: React.FC<UploadMomentPopupProps> = ({ isOpen, onClose, 
                                         <button
                                             key={star}
                                             type="button"
-                                            onClick={() => setRating(star)}
+                                            onClick={() => setRating(prev => prev === star ? 0 : star)}
                                             className="focus:outline-none transition-transform hover:scale-110"
                                         >
                                             <Star
@@ -201,7 +201,7 @@ const UploadMomentPopup: React.FC<UploadMomentPopupProps> = ({ isOpen, onClose, 
                         </button>
                         <button
                             type="submit"
-                            disabled={!imagePreview || !location || !caption}
+                            disabled={!imagePreview || !location || !caption || rating === 0}
                             className="flex-[2] bg-orange-500 py-4 rounded-2xl font-bold text-white shadow-lg shadow-orange-200 hover:bg-orange-600 hover:shadow-orange-300 disabled:opacity-50 disabled:shadow-none transition-all scale-100 active:scale-95"
                         >
                             Share Moment
