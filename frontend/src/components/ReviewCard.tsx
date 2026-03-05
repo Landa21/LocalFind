@@ -138,12 +138,12 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                onLocationClick?.(location);
+                                onLocationClick?.(location || '');
                             }}
                             className="hover:underline decoration-white/50 underline-offset-2 transition-all hover:text-white truncate max-w-[150px] text-left"
-                            title={location}
+                            title={location || ''}
                         >
-                            {location}
+                            {location || 'Unknown Location'}
                         </button>
                     </div>
                 </div>
@@ -172,9 +172,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                         !isExpanded ? "line-clamp-2 mb-1" : "mb-1"
                     )}
                 >
-                    "{caption}"
+                    "{caption || 'No description available'}"
                 </p>
-                {caption.length > 80 ? (
+                {(caption?.length || 0) > 80 ? (
                     <button
                         onClick={(e) => {
                             e.stopPropagation();

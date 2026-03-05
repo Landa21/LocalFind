@@ -1,5 +1,5 @@
-import React from 'react';
-import { Star, MapPin } from 'lucide-react';
+import { Star, MapPin, Heart } from 'lucide-react';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface RecommendationCardProps {
     name: string;
@@ -10,6 +10,7 @@ interface RecommendationCardProps {
     image: string;
     onLocationClick?: (location: string) => void;
     onClick?: () => void;
+    description?: string;
 }
 
 const RecommendationCard: React.FC<RecommendationCardProps> = ({
@@ -20,8 +21,27 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
     location,
     image,
     onLocationClick,
-    onClick
+    onClick,
+    description
 }) => {
+    const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+    const isLiked = isFavorite('rec-' + name);
+
+    const handleFavorite = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (isLiked) {
+            removeFavorite('rec-' + name);
+        } else {
+            addFavorite({
+                id: 'rec-' + name,
+                userName: name,
+                location: location,
+                caption: description || '',
+                rating: rating,
+                imageUrl: image
+            });
+        }
+    };
     return (
         <div
             onClick={onClick}
@@ -33,9 +53,20 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                     alt={name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute top-2 right-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-                    <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                    <span className="text-xs font-bold text-gray-900 dark:text-white">{rating}</span>
+                <div className="absolute top-2 right-2 flex flex-col gap-2">
+                    <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+                        <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                        <span className="text-xs font-bold text-gray-900 dark:text-white">{rating}</span>
+                    </div>
+                    <button
+                        onClick={handleFavorite}
+                        className={`p-2 rounded-lg backdrop-blur-md transition-all ${isLiked
+                                ? 'bg-rose-500 text-white shadow-lg shadow-rose-200'
+                                : 'bg-white/80 text-gray-400 hover:text-rose-500 hover:bg-white'
+                            }`}
+                    >
+                        <Heart size={14} className={isLiked ? 'fill-white' : ''} />
+                    </button>
                 </div>
             </div>
             <div className="p-4">

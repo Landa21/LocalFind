@@ -1,6 +1,7 @@
-import React from 'react';
 import { X, Star, MapPin, Globe, Phone, Clock, Share2, Heart, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useFavorites } from '../context/FavoritesContext';
+import { cn } from '../lib/utils';
 
 export interface Place {
     id: number;
@@ -24,7 +25,26 @@ interface PlaceDetailsModalProps {
 }
 
 const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({ isOpen, onClose, place }) => {
+    const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+
     if (!place) return null;
+
+    const isLiked = isFavorite('rec-' + place.name);
+
+    const handleFavorite = () => {
+        if (isLiked) {
+            removeFavorite('rec-' + place.name);
+        } else {
+            addFavorite({
+                id: 'rec-' + place.name,
+                userName: place.name,
+                location: place.location,
+                caption: place.description || '',
+                rating: place.rating,
+                imageUrl: place.image
+            });
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -82,11 +102,17 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({ isOpen, onClose, 
                                     <span className="text-gray-400 text-sm">{place.reviews} reviews</span>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button className="p-2.5 rounded-xl border border-gray-100 text-gray-400 hover:text-orange-600 hover:border-orange-100 transition-all">
-                                        <Share2 size={18} />
-                                    </button>
-                                    <button className="p-2.5 rounded-xl border border-gray-100 text-gray-400 hover:text-red-500 hover:border-red-100 transition-all">
-                                        <Heart size={18} />
+                                    <button
+                                        onClick={handleFavorite}
+                                        className={cn(
+                                            "p-2.5 rounded-xl border transition-all",
+                                            isLiked
+                                                ? "bg-rose-50 border-rose-100 text-rose-500 shadow-sm"
+                                                : "border-gray-100 text-gray-400 hover:text-rose-500 hover:border-rose-100"
+                                        )}
+                                        title={isLiked ? "Remove from favorites" : "Add to favorites"}
+                                    >
+                                        <Heart size={18} className={isLiked ? "fill-current" : ""} />
                                     </button>
                                 </div>
                             </div>

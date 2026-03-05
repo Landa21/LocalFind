@@ -4,7 +4,10 @@ import {
     LayoutDashboard,
     Compass,
     Heart,
-    Bell
+    Bell,
+    Sparkles,
+    Calendar,
+    MessageSquare
 } from 'lucide-react';
 import UserMenu from '../components/UserMenu';
 
@@ -15,6 +18,9 @@ const DashboardLayout: React.FC = () => {
 
     const menuItems = [
         { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+        { path: '/recommendations', label: 'Recommendations', icon: Sparkles },
+        { path: '/events', label: 'Events', icon: Calendar },
+        { path: '/community-moments', label: 'Moments', icon: MessageSquare },
         { path: '/favorites', label: 'Favorites', icon: Heart },
     ];
 
