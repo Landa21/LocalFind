@@ -147,18 +147,20 @@ const Dashboard: React.FC = () => {
                 item.location.toLowerCase().includes(searchQuery.toLowerCase());
             return matchesMood && matchesSearch;
         });
-    }, [selectedMood, searchQuery]);
+    }, [reviews, selectedMood, searchQuery]);
 
     // Extend CardStackItem to include the review object
     type ReviewStackItem = CardStackItem & { review: any };
 
-    const stackItems: ReviewStackItem[] = filteredReviews.map(review => ({
-        id: review.id,
-        title: review.userName,
-        description: review.caption,
-        imageSrc: review.imageUrl,
-        review: review
-    }));
+    const stackItems: ReviewStackItem[] = useMemo(() => {
+        return filteredReviews.map(review => ({
+            id: review.id,
+            title: review.userName,
+            description: review.caption,
+            imageSrc: review.imageUrl,
+            review: review
+        }));
+    }, [filteredReviews]);
 
     return (
         <div className="space-y-8 pb-12 transition-colors duration-300">
