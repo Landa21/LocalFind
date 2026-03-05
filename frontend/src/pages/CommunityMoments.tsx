@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageCircle, Search, Filter, Plus } from 'lucide-react';
+import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import ReviewCard from '../components/ReviewCard';
 import MapPopup from '../components/MapPopup';
 import UploadMomentPopup from '../components/UploadMomentPopup';
 import { useDebounce } from '../lib/utils';
+import { useAuth } from '../context/AuthContext';
 
 const CommunityMoments: React.FC = () => {
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -17,23 +21,28 @@ const CommunityMoments: React.FC = () => {
 
     const categories = ['All', 'Nature', 'Shopping', 'Cafe', 'Culture', 'Nightlife', 'Wellness', 'Entertainment', 'Food'];
 
-    // Mock Data
-    const [allMoments, setAllMoments] = useState([
-        { id: 1, userName: 'Sarah M.', location: 'The Hidden Garden', caption: 'It was great!', rating: 5, imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=600', initialLikes: 24, category: 'Nature' },
-        { id: 2, userName: 'John D.', location: 'Retro Vinyl Shop', caption: 'Amazing collection!', rating: 4.5, imageUrl: 'https://images.unsplash.com/photo-1532452119098-a3650b3c46d3?auto=format&fit=crop&q=80&w=600', initialLikes: 12, category: 'Shopping' },
-        { id: 3, userName: 'Emily R.', location: 'Artisan Coffee Co.', caption: 'Best latte in town.', rating: 5, imageUrl: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=600', initialLikes: 45, category: 'Cafe' },
-        { id: 4, userName: 'Michael B.', location: 'Midnight Library', caption: 'A quiet place to read.', rating: 4, imageUrl: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=600', initialLikes: 18, category: 'Culture' },
-        { id: 5, userName: 'Jessica K.', location: 'Skyline Terrace', caption: 'Stunning city views.', rating: 5, imageUrl: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=600', initialLikes: 56, category: 'Nightlife' },
-        { id: 6, userName: 'David L.', location: 'Ocean Mist Spa', caption: 'Feeling recharged.', rating: 4.8, imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=600', initialLikes: 32, category: 'Wellness' },
-        { id: 7, userName: 'Sophia W.', location: 'Vintage Cinema', caption: 'Classic vibes.', rating: 4.7, imageUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=600', initialLikes: 21, category: 'Entertainment' },
-        { id: 8, userName: 'Ryan P.', location: 'Local Farmer Market', caption: 'Fresh produce everywhere!', rating: 4.9, imageUrl: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=600', initialLikes: 38, category: 'Food' },
-    ]);
+    const [allMoments, setAllMoments] = useState<any[]>([]);
+
+    useEffect(() => {
+        const q = query(collection(db, 'moments'), orderBy('createdAt', 'desc'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const momentsData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setAllMoments(momentsData);
+        }, (error) => {
+            console.error("Error fetching moments:", error);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const handleLocationClick = (location: string) => {
         setSelectedLocation(location);
     };
 
-    const handleShareMoment = (newMoment: {
+    const handleShareMoment = async (newMoment: {
         userName: string;
         location: string;
         caption: string;
@@ -43,14 +52,28 @@ const CommunityMoments: React.FC = () => {
     }) => {
         const momentToAdd = {
             ...newMoment,
-            id: Date.now(),
-            initialLikes: 0
+            userName: user?.displayName || user?.email?.split('@')[0] || 'You',
+            userImage: user?.photoURL || null,
+            initialLikes: 0,
+            createdAt: new Date().toISOString()
         };
-        setAllMoments([momentToAdd, ...allMoments]);
+        try {
+            await addDoc(collection(db, 'moments'), momentToAdd);
+        } catch (error) {
+            console.error("Error saving moment: ", error);
+        }
     };
 
-    const handleDeleteMoment = (id: number | string) => {
-        setAllMoments(allMoments.filter(m => m.id !== id));
+    const handleDeleteMoment = async (id: number | string) => {
+        if (typeof id === 'string') {
+            try {
+                await deleteDoc(doc(db, 'moments', id));
+            } catch (error) {
+                console.error("Error deleting moment: ", error);
+            }
+        } else {
+            setAllMoments(allMoments.filter(m => m.id !== id));
+        }
     };
 
     const filteredMoments = allMoments.filter(moment => {

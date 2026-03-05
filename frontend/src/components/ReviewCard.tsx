@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { Heart, MapPin, Star, MessageCircle, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Heart, MapPin, MessageCircle, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useFavorites } from '../context/FavoritesContext';
+import { useAuth } from '../context/AuthContext';
+import { doc, updateDoc, increment, arrayUnion, onSnapshot } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import CommentsModal from './CommentsModal';
 
 interface ReviewCardProps {
@@ -32,24 +35,37 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     onDelete
 }) => {
     const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+    const { user } = useAuth();
     const [likes, setLikes] = useState(initialLikes);
     const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    // Check if the item is already favored
+    // Check if the item is already favored locally
     const isLiked = isFavorite(id);
 
-    const [comments, setComments] = useState([
-        { id: 1, user: 'Alex', text: 'Looks amazing! 😍' },
-        { id: 2, user: 'Jordan', text: 'Adding this to my list.' },
-        { id: 3, user: 'Taylor', text: 'I need to go here.' },
-        { id: 4, user: 'Casey', text: 'Great photo!' },
-    ]);
+    const [comments, setComments] = useState<any[]>([]);
 
-    const handleLike = (e: React.MouseEvent) => {
+    useEffect(() => {
+        if (typeof id === 'string') {
+            const unsubscribe = onSnapshot(doc(db, 'moments', id), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.likes !== undefined) setLikes(data.likes);
+                    if (data.comments) setComments(data.comments);
+                }
+            });
+            return () => unsubscribe();
+        }
+    }, [id]);
+
+    const handleLike = async (e: React.MouseEvent) => {
         e.stopPropagation();
         if (isLiked) {
             setLikes(likes - 1);
             removeFavorite(id);
+            if (typeof id === 'string') {
+                await updateDoc(doc(db, 'moments', id), { likes: increment(-1) }).catch(console.error);
+            }
         } else {
             setLikes(likes + 1);
             addFavorite({
@@ -60,13 +76,26 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                 caption,
                 rating,
                 imageUrl,
-                initialLikes
+                initialLikes: likes + 1
             });
+            if (typeof id === 'string') {
+                await updateDoc(doc(db, 'moments', id), { likes: increment(1) }).catch(console.error);
+            }
         }
     };
 
-    const handleAddComment = (text: string) => {
-        setComments([...comments, { id: Date.now(), user: 'You', text }]);
+    const handleAddComment = async (text: string) => {
+        const newComment = {
+            id: Date.now(),
+            user: user?.displayName || user?.email?.split('@')[0] || 'You',
+            text
+        };
+        setComments([...comments, newComment]);
+        if (typeof id === 'string') {
+            await updateDoc(doc(db, 'moments', id), {
+                comments: arrayUnion(newComment)
+            }).catch(console.error);
+        }
     };
 
     const hasImage = !!imageUrl;
@@ -97,9 +126,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             <div className="absolute top-0 left-0 right-0 p-4 flex items-center gap-3 z-10">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold overflow-hidden bg-white/20 backdrop-blur-md text-white border border-white/20 shadow-sm">
                     {userImage ? (
-                        <img src={userImage} alt={userName} className="w-full h-full object-cover" />
+                        <img src={userImage} alt={userName || 'User'} className="w-full h-full object-cover" />
                     ) : (
-                        userName.charAt(0).toUpperCase()
+                        (userName || '?').charAt(0).toUpperCase()
                     )}
                 </div>
                 <div className="text-white drop-shadow-md">
@@ -111,7 +140,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                                 e.stopPropagation();
                                 onLocationClick?.(location);
                             }}
-                            className="hover:underline decoration-white/50 underline-offset-2 transition-all hover:text-white"
+                            className="hover:underline decoration-white/50 underline-offset-2 transition-all hover:text-white truncate max-w-[150px] text-left"
+                            title={location}
                         >
                             {location}
                         </button>
@@ -131,18 +161,32 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                             <Trash2 size={14} />
                         </button>
                     )}
-                    <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 border border-white/20 shadow-sm">
-                        <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                        <span className="text-xs font-bold text-white">{rating.toFixed(1)}</span>
-                    </div>
                 </div>
             </div>
 
             {/* Content Container (Bottom) */}
-            <div className="absolute bottom-0 left-0 right-0 m-3 p-4 rounded-xl flex flex-col">
-                <p className="text-white text-sm font-medium drop-shadow-md mb-3">
+            <div className="absolute bottom-0 left-0 right-0 m-3 p-4 rounded-xl flex flex-col transition-all duration-300">
+                <p
+                    className={cn(
+                        "text-white text-sm font-medium drop-shadow-md transition-all duration-300",
+                        !isExpanded ? "line-clamp-2 mb-1" : "mb-1"
+                    )}
+                >
                     "{caption}"
                 </p>
+                {caption.length > 80 ? (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsExpanded(!isExpanded);
+                        }}
+                        className="text-xs text-white/70 hover:text-white font-medium self-start mb-3 transition-colors"
+                    >
+                        {isExpanded ? 'See less' : 'See more'}
+                    </button>
+                ) : (
+                    <div className="mb-3" />
+                )}
 
                 <div className="flex items-center gap-4">
                     <button

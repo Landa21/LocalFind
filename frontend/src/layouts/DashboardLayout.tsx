@@ -62,7 +62,7 @@ const DashboardLayout: React.FC = () => {
             {/* Main Content Area */}
             <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
                 {/* Desktop Top Navbar */}
-                <header className="hidden md:flex items-center justify-end px-8 py-4 bg-transparent sticky top-0 z-10 transition-colors duration-300">
+                <header className="hidden md:flex items-center justify-end px-8 py-4 bg-transparent sticky top-0 z-50 transition-colors duration-300">
                     <div className="flex items-center gap-4">
                         <button className="p-2 rounded-full hover:bg-gray-100/50 dark:hover:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors relative">
                             <Bell className="w-5 h-5" />

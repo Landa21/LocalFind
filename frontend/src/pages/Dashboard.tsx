@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Sparkles, Search } from 'lucide-react';
+import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import WelcomePopup from '../components/WelcomePopup';
 import ReviewCard from '../components/ReviewCard';
 import EventCard from '../components/EventCard';
@@ -99,11 +101,20 @@ const Dashboard: React.FC = () => {
         { id: 3, title: 'Spa & Wellness Day', date: 'Sun, 26 Feb', time: '09:00', location: 'Zen Retreat', image: 'https://images.unsplash.com/photo-1544161515-4af6b1d462c2?q=80&w=1470&auto=format&fit=crop', category: 'chill' },
     ];
 
-    const reviews = [
-        { id: 1, userName: 'Sarah M.', userImage: '', location: 'The Hidden Garden', caption: 'it was great!', rating: 5, imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=600', initialLikes: 24, category: 'nature' },
-        { id: 2, userName: 'John D.', location: 'Retro Vinyl Shop', caption: 'Amazing collection!', rating: 4.5, imageUrl: 'https://images.unsplash.com/photo-1532452119098-a3650b3c46d3?auto=format&fit=crop&q=80&w=600', initialLikes: 12, category: 'cultural' },
-        { id: 3, userName: 'Emily R.', location: 'Artisan Coffee Co.', caption: 'Best latte in town.', rating: 5, imageUrl: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80&w=600', initialLikes: 45, category: 'foodie' },
-    ];
+    const [reviews, setReviews] = useState<any[]>([]);
+
+    useEffect(() => {
+        const q = query(collection(db, 'moments'), orderBy('createdAt', 'desc'), limit(5));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const momentsData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setReviews(momentsData);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     // Filtering Logic
     const filteredRecommendations = useMemo(() => {
@@ -139,7 +150,7 @@ const Dashboard: React.FC = () => {
     }, [selectedMood, searchQuery]);
 
     // Extend CardStackItem to include the review object
-    type ReviewStackItem = CardStackItem & { review: typeof reviews[0] };
+    type ReviewStackItem = CardStackItem & { review: any };
 
     const stackItems: ReviewStackItem[] = filteredReviews.map(review => ({
         id: review.id,
