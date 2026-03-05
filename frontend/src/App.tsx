@@ -1,19 +1,25 @@
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import StartTrial from './pages/StartTrial';
+import Favorites from './pages/Favorites';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Recommendations from './pages/Recommendations';
+import Events from './pages/Events';
+import CommunityMoments from './pages/CommunityMoments';
+
+import Settings from './pages/Settings';
 
 function App() {
   return (
-    <AuthProvider>
+    <FavoritesProvider>
       <Router>
         <Toaster position="top-right" />
         <Routes>
@@ -30,14 +36,16 @@ function App() {
           }>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/bookings" element={<div className="p-8">My Bookings Coming Soon</div>} />
-            <Route path="/favorites" element={<div className="p-8">Favorites Coming Soon</div>} />
-            <Route path="/settings" element={<div className="p-8">Settings Coming Soon</div>} />
+            <Route path="/recommendations" element={<Recommendations />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/community-moments" element={<CommunityMoments />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
 
         </Routes>
       </Router>
-    </AuthProvider>
+    </FavoritesProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from 'react';
 import {
     type User,
     onAuthStateChanged,
@@ -8,6 +8,8 @@ import {
     sendEmailVerification
 } from 'firebase/auth';
 import { auth, googleProvider, appleProvider } from '../config/firebase';
+
+const BACKEND_URL = 'http://localhost:3001';
 
 interface AuthContextType {
     user: User | null;
@@ -27,13 +29,72 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             console.log("Auth state changed:", currentUser ? "User logged in" : "No user");
+
+            if (currentUser) {
+                // If we have a user from Firebase, sync with backend session
+                try {
+                    const idToken = await currentUser.getIdToken();
+                    await fetch(`${BACKEND_URL}/api/sessionLogin`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ idToken }),
+                        credentials: 'include',
+                    });
+                } catch (err) {
+                    console.error("Failed to sync session with backend:", err);
+                }
+            }
+
             setUser(currentUser);
             setLoading(false);
         });
         return unsubscribe;
     }, []);
+
+    const timeoutRef = useRef<any>(null);
+    const INACTIVITY_TIMEOUT = 4 * 60 * 60 * 1000; // 4 hours
+
+    const resetTimer = useCallback(() => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        if (user) {
+            timeoutRef.current = setTimeout(() => {
+                console.log("Inactivity detected, logging out...");
+                logout();
+            }, INACTIVITY_TIMEOUT);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (user) {
+            const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+
+            const handleEvent = () => resetTimer();
+
+            events.forEach(event => {
+                window.addEventListener(event, handleEvent);
+            });
+
+            // Initialize timer
+            resetTimer();
+
+            return () => {
+                events.forEach(event => {
+                    window.removeEventListener(event, handleEvent);
+                });
+                if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current);
+                }
+            };
+        } else {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        }
+    }, [user, resetTimer]);
 
     const signInWithGoogle = async () => {
         setError(null);
@@ -57,6 +118,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setError(null);
         try {
             await signOut(auth);
+            await fetch(`${BACKEND_URL}/api/sessionLogout`, {
+                method: 'POST',
+                credentials: 'include',
+            });
+            sessionStorage.removeItem('welcomeShown');
         } catch (err: any) {
             setError(err.message);
         }

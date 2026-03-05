@@ -9,19 +9,35 @@
   --color-warm-gray: #FDFBF7;
 }
 
+/* Enable class-based dark mode in Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: var(--color-warm-gray, #ffffff);
+  --bg-color: #ffffff;
+  --text-color: #111827;
+  /* gray-900 */
+
+  background-color: var(--bg-color);
+  color: var(--text-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg-color: #030712;
+  /* gray-950 */
+  --text-color: #f9fafb;
+  /* gray-50 */
 }
 
 body {
