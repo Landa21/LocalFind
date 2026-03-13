@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
     const upcomingEvents = [
         { id: 1, title: 'Jazz Night', date: 'Fri, 24 Feb', time: '19:00', location: 'The Blue Note', image: 'https://images.unsplash.com/photo-1562593623-9731b885cd0d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'nightlife' },
         { id: 2, title: 'Pottery Workshop', date: 'Sat, 25 Feb', time: '10:00', location: 'Clay Studio', image: 'https://images.unsplash.com/photo-1508269151431-a34449ca161d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', category: 'cultural' },
-        { id: 3, title: 'Spa & Wellness Day', date: 'Sun, 26 Feb', time: '09:00', location: 'Zen Retreat', image: 'https://images.unsplash.com/photo-1544161515-4af6b1d462c2?q=80&w=1470&auto=format&fit=crop', category: 'chill' },
+        { id: 3, title: 'Spa & Wellness Day', date: 'Sun, 26 Feb', time: '09:00', location: 'Zen Retreat', image: 'https://i.pinimg.com/1200x/4b/d4/3a/4bd43a1a21a45a6b98d7be56406e2fb5.jpg', category: 'chill' },
     ];
 
     const [reviews, setReviews] = useState<any[]>([]);
@@ -302,7 +302,6 @@ const Dashboard: React.FC = () => {
                     <section className="bg-white dark:bg-gray-800 rounded-3xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="font-bold text-gray-900 dark:text-white text-lg transition-colors">Upcoming Events</h3>
-                            <Link to="/events" className="text-xs font-bold text-orange-600 uppercase tracking-wide hover:text-orange-700 transition-colors">View All</Link>
                         </div>
                         {filteredEvents.length > 0 ? (
                             <div className="space-y-4">
@@ -315,9 +314,9 @@ const Dashboard: React.FC = () => {
                                 <p className="text-gray-400 dark:text-gray-500 text-sm">No events found.</p>
                             </div>
                         )}
-                        <button className="w-full mt-6 py-2.5 bg-white dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 font-medium rounded-xl hover:bg-orange-50/20 dark:hover:bg-gray-700 transition-colors text-sm border border-transparent dark:border-gray-700">
+                        <Link to="/events" className="block w-full mt-6 py-2.5 bg-white dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 font-medium rounded-xl hover:bg-orange-50/20 dark:hover:bg-gray-700 transition-colors text-sm border border-transparent dark:border-gray-700 text-center">
                             Find More Events
-                        </button>
+                        </Link>
                     </section>
 
                 </div>

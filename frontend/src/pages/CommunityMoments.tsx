@@ -9,6 +9,30 @@ import UploadMomentPopup from '../components/UploadMomentPopup';
 import { useDebounce } from '../lib/utils';
 import { useAuth } from '../context/AuthContext';
 
+// Compress image to fit within Firestore's 1MB document limit
+const compressImage = (dataUrl: string, maxWidth = 800, maxHeight = 800, quality = 0.6): Promise<string> => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let { width, height } = img;
+
+            if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                width = Math.round(width * ratio);
+                height = Math.round(height * ratio);
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d')!;
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = dataUrl;
+    });
+};
+
 const CommunityMoments: React.FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -50,14 +74,24 @@ const CommunityMoments: React.FC = () => {
         imageUrl: string;
         category: string;
     }) => {
-        const momentToAdd = {
-            ...newMoment,
-            userName: user?.displayName || user?.email?.split('@')[0] || 'You',
-            userImage: user?.photoURL || null,
-            initialLikes: 0,
-            createdAt: new Date().toISOString()
-        };
         try {
+            // Compress image to fit within Firestore's 1MB document limit
+            let finalImageUrl = newMoment.imageUrl;
+            if (newMoment.imageUrl && newMoment.imageUrl.startsWith('data:')) {
+                finalImageUrl = await compressImage(newMoment.imageUrl);
+            }
+
+            const momentToAdd = {
+                ...newMoment,
+                imageUrl: finalImageUrl,
+                userName: user?.displayName || user?.email?.split('@')[0] || 'You',
+                userImage: user?.photoURL || null,
+                userId: user?.uid || null,
+                initialLikes: 0,
+                likes: 0,
+                comments: [],
+                createdAt: new Date().toISOString()
+            };
             await addDoc(collection(db, 'moments'), momentToAdd);
         } catch (error) {
             console.error("Error saving moment: ", error);
@@ -178,7 +212,7 @@ const CommunityMoments: React.FC = () => {
                                 {...moment}
                                 className="border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-100 transition-all"
                                 onLocationClick={handleLocationClick}
-                                onDelete={moment.userName === 'You' ? () => handleDeleteMoment(moment.id) : undefined}
+                                onDelete={(moment.userId && user?.uid && moment.userId === user.uid) ? () => handleDeleteMoment(moment.id) : undefined}
                             />
                         </div>
                     ))}
