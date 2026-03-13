@@ -53,20 +53,11 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                     alt={name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute top-2 right-2 flex flex-col gap-2">
+                <div className="absolute top-2 right-2">
                     <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
                         <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
                         <span className="text-xs font-bold text-gray-900 dark:text-white">{rating}</span>
                     </div>
-                    <button
-                        onClick={handleFavorite}
-                        className={`p-2 rounded-lg backdrop-blur-md transition-all ${isLiked
-                                ? 'bg-rose-500 text-white shadow-lg shadow-rose-200'
-                                : 'bg-white/80 text-gray-400 hover:text-rose-500 hover:bg-white'
-                            }`}
-                    >
-                        <Heart size={14} className={isLiked ? 'fill-white' : ''} />
-                    </button>
                 </div>
             </div>
             <div className="p-4">
@@ -84,8 +75,19 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                         {location}
                     </span>
                 </button>
-                <div className="text-xs text-gray-400 dark:text-gray-500">
-                    {reviews} reviews
+                <div className="flex items-center justify-between mt-1">
+                    <div className="text-xs text-gray-400 dark:text-gray-500">
+                        {reviews} reviews
+                    </div>
+                    <button
+                        onClick={handleFavorite}
+                        className={`p-1.5 rounded-full transition-all ${isLiked
+                                ? 'bg-rose-50 text-rose-500 dark:bg-rose-900/20'
+                                : 'bg-gray-50 text-gray-400 hover:text-rose-500 hover:bg-rose-50 dark:bg-gray-800 dark:hover:bg-gray-700'
+                            }`}
+                    >
+                        <Heart size={16} className={isLiked ? 'fill-current' : ''} />
+                    </button>
                 </div>
             </div>
         </div>
