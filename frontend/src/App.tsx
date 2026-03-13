@@ -17,6 +17,17 @@ import CommunityMoments from './pages/CommunityMoments';
 
 import Settings from './pages/Settings';
 
+// Admin Pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import UserManager from './pages/admin/UserManager';
+import AdminListings from './pages/admin/AdminListings';
+import AdminAnalytics from './pages/admin/AdminAnalytics';
+import ExperienceModeration from './pages/admin/ExperienceModeration';
+
+// Owner Pages
+import ManageListings from './pages/owner/ManageListings';
+import AddListing from './pages/owner/AddListing';
+
 function App() {
   return (
     <FavoritesProvider>
@@ -28,7 +39,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/start-trial" element={<StartTrial />} />
 
-          {/* Protected Dashboard Routes */}
+          {/* User Dashboard Routes */}
           <Route element={
             <ProtectedRoute>
               <DashboardLayout />
@@ -41,6 +52,29 @@ function App() {
             <Route path="/user/moments" element={<CommunityMoments />} />
             <Route path="/user/favorites" element={<Favorites />} />
             <Route path="/user/settings" element={<Settings />} />
+          </Route>
+
+          {/* Admin Dashboard Routes */}
+          <Route element={
+            <ProtectedRoute adminOnly>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
+            <Route path="/admin/users" element={<UserManager />} />
+            <Route path="/admin/listings" element={<AdminListings />} />
+            <Route path="/admin/moderation" element={<ExperienceModeration />} />
+          </Route>
+
+          {/* Owner Dashboard Routes */}
+          <Route element={
+            <ProtectedRoute ownerOnly>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }>
+            <Route path="/owner/dashboard" element={<ManageListings />} />
+            <Route path="/owner/add-listing" element={<AddListing />} />
           </Route>
 
         </Routes>

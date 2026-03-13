@@ -6,7 +6,7 @@ import { auth } from '../config/firebase';
 import { useAuth } from '../context/AuthContext';
 
 const SignIn: React.FC = () => {
-    const { signInWithGoogle, signInWithApple, user, loading: authLoading } = useAuth();
+    const { signInWithGoogle, signInWithApple, user, role, loading: authLoading, profileLoading } = useAuth();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -16,10 +16,16 @@ const SignIn: React.FC = () => {
 
     // Redirect if already logged in
     useEffect(() => {
-        if (user && !authLoading) {
-            navigate('/user/dashboard', { replace: true });
+        if (user && !authLoading && !profileLoading) {
+            if (role === 'admin') {
+                navigate('/admin/dashboard', { replace: true });
+            } else if (role === 'experience_owner') {
+                navigate('/owner/dashboard', { replace: true });
+            } else {
+                navigate('/user/dashboard', { replace: true });
+            }
         }
-    }, [user, authLoading, navigate]);
+    }, [user, role, authLoading, profileLoading, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

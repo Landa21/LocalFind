@@ -13,7 +13,10 @@ const BACKEND_URL = 'http://localhost:3001';
 
 interface AuthContextType {
     user: User | null;
+    userData: any | null;
+    role: 'user' | 'experience_owner' | 'admin' | null;
     loading: boolean;
+    profileLoading: boolean;
     signInWithGoogle: () => Promise<void>;
     signInWithApple: () => Promise<void>;
     signUpWithEmail: (email: string, password: string) => Promise<void>;
@@ -25,29 +28,57 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [userData, setUserData] = useState<any | null>(null);
+    const [role, setRole] = useState<'user' | 'experience_owner' | 'admin' | null>(null);
     const [loading, setLoading] = useState(true);
+    const [profileLoading, setProfileLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             console.log("Auth state changed:", currentUser ? "User logged in" : "No user");
+            setUser(currentUser);
 
             if (currentUser) {
-                // If we have a user from Firebase, sync with backend session
+                setProfileLoading(true);
                 try {
                     const idToken = await currentUser.getIdToken();
+                    
+                    // Look for a name override in sessionStorage (set during sign-up)
+                    const nameOverride = sessionStorage.getItem('pendingDisplayName');
+
+                    // Sync session
                     await fetch(`${BACKEND_URL}/api/sessionLogin`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ idToken }),
+                        body: JSON.stringify({ 
+                            idToken,
+                            displayName: nameOverride || currentUser.displayName
+                        }),
                         credentials: 'include',
                     });
+
+                    if (nameOverride) sessionStorage.removeItem('pendingDisplayName');
+
+                    // Fetch profile/role
+                    const response = await fetch(`${BACKEND_URL}/api/sessionStatus`, {
+                        credentials: 'include',
+                    });
+                    const data = await response.json();
+                    if (data.status === 'authenticated' && data.user) {
+                        setRole(data.user.role || 'user');
+                        setUserData(data.user);
+                    }
                 } catch (err) {
-                    console.error("Failed to sync session with backend:", err);
+                    console.error("Failed to sync session or fetch profile:", err);
+                } finally {
+                    setProfileLoading(false);
                 }
+            } else {
+                setRole(null);
+                setUserData(null);
             }
 
-            setUser(currentUser);
             setLoading(false);
         });
         return unsubscribe;
@@ -153,7 +184,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     return (
-        <AuthContext.Provider value={{ user, loading, signInWithGoogle, signInWithApple, signUpWithEmail, logout, error }}>
+        <AuthContext.Provider value={{
+            user,
+            userData,
+            role,
+            loading,
+            profileLoading,
+            signInWithGoogle,
+            signInWithApple,
+            signUpWithEmail,
+            logout,
+            error
+        }}>
             {!loading && children}
         </AuthContext.Provider>
     );

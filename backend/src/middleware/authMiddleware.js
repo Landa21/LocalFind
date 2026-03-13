@@ -11,10 +11,18 @@ const checkAuth = async (req, res, next) => {
     }
 
     try {
-        // Verify the session cookie. In this case, we check if revoked is true
-        // to ensure the session is still valid.
         const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true);
-        req.user = decodedClaims;
+        
+        // Fetch role from Firestore
+        const db = admin.firestore();
+        const userDoc = await db.collection('users').doc(decodedClaims.uid).get();
+        const userData = userDoc.exists ? userDoc.data() : {};
+        
+        req.user = { 
+            ...decodedClaims, 
+            role: userData.role || 'user' 
+        };
+        
         next();
     } catch (error) {
         console.error('Auth Middleware Error:', error);

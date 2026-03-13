@@ -1,0 +1,6 @@
+admin123@gmail.com | Name: null | Role: admin
+munyadziwapetrus16@gmail.com | Name: null | Role: user
+thabouser@gmail.com | Name: null | Role: user
+testuser1772021483939@example.com | Name: null | Role: user
+tester123@example.com | Name: null | Role: user
+yolandapetunia8@gmail.com | Name: Yolanda | Role: admin

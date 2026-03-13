@@ -7,22 +7,42 @@ import {
     Bell,
     Sparkles,
     Calendar,
-    MessageSquare
+    MessageSquare,
+    Shield,
+    List,
+    BarChart3
 } from 'lucide-react';
 import UserMenu from '../components/UserMenu';
+import { useAuth } from '../context/AuthContext';
 
 const DashboardLayout: React.FC = () => {
-    // const { logout, user } = useAuth(); // potentially unused now if only UserMenu needs it, but checked sidebar loop usage
+    const { role } = useAuth();
     const location = useLocation();
-    // const navigate = useNavigate(); // unused in this file now
 
-    const menuItems = [
-        { path: '/user/dashboard', label: 'Overview', icon: LayoutDashboard },
-        { path: '/user/recommendations', label: 'Recommendations', icon: Sparkles },
-        { path: '/user/events', label: 'Events', icon: Calendar },
-        { path: '/user/moments', label: 'Moments', icon: MessageSquare },
-        { path: '/user/favorites', label: 'Favorites', icon: Heart },
+    const userMenuItems = [
+        { icon: LayoutDashboard, label: 'Overview', path: '/user/dashboard' },
+        { icon: Sparkles, label: 'Recommendations', path: '/user/recommendations' },
+        { icon: Calendar, label: 'Events', path: '/user/events' },
+        { icon: MessageSquare, label: 'Moments', path: '/user/moments' },
+        { icon: Heart, label: 'Favorites', path: '/user/favorites' },
     ];
+
+    const adminMenuItems = [
+        { icon: LayoutDashboard, label: 'Admin Panel', path: '/admin/dashboard' },
+        { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
+        { icon: Shield, label: 'User Management', path: '/admin/users' },
+        { icon: List, label: 'Listings', path: '/admin/listings' },
+        { icon: Sparkles, label: 'Moderation', path: '/admin/moderation' },
+    ];
+
+    const ownerMenuItems = [
+        { icon: LayoutDashboard, label: 'Host Dashboard', path: '/owner/dashboard' },
+        { icon: Sparkles, label: 'Add Listing', path: '/owner/add-listing' },
+    ];
+
+    const menuItems = role === 'admin' ? adminMenuItems : 
+                     role === 'experience_owner' ? ownerMenuItems : 
+                     userMenuItems;
 
     return (
         <div className="min-h-screen bg-white dark:bg-gray-950 flex font-sans transition-colors duration-300">

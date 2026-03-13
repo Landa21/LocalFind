@@ -13,7 +13,7 @@ import MapPopup from '../components/MapPopup';
 import PlaceDetailsModal, { type Place } from '../components/PlaceDetailsModal';
 
 const Dashboard: React.FC = () => {
-    const { user } = useAuth();
+    const { user, userData } = useAuth();
     const [showWelcome, setShowWelcome] = useState(() => {
         return !sessionStorage.getItem('welcomeShown');
     });
@@ -166,7 +166,7 @@ const Dashboard: React.FC = () => {
         <div className="space-y-8 pb-12 transition-colors duration-300">
             {showWelcome && (
                 <WelcomePopup
-                    userName={user?.displayName?.split(' ')[0] || 'Friend'}
+                    userName={(userData?.displayName || user?.displayName)?.split(' ')[0] || 'Friend'}
                     onClose={() => {
                         setShowWelcome(false);
                         sessionStorage.setItem('welcomeShown', 'true');
@@ -190,7 +190,7 @@ const Dashboard: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white transition-colors">
-                        Welcome back, {user?.displayName?.split(' ')[0] || 'Explorer'}!
+                        Welcome back, {(userData?.displayName || user?.displayName)?.split(' ')[0] || 'Explorer'}!
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 mt-1 mb-6 transition-colors">Discover what's happening around you.</p>
 

@@ -55,6 +55,8 @@ const SignUp: React.FC = () => {
         }
 
         try {
+            // Store name temporarily so AuthContext can pick it up for Firestore sync
+            sessionStorage.setItem('pendingDisplayName', fullName);
             await signUpWithEmail(email, password);
             await sendWelcomeEmail(email, fullName);
             toast.success('Account created! Please check your email to verify your account.');

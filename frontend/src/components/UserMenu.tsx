@@ -4,7 +4,7 @@ import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const UserMenu: React.FC = () => {
-    const { user, logout } = useAuth();
+    const { user, userData, logout } = useAuth();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -34,7 +34,8 @@ const UserMenu: React.FC = () => {
 
     // Get initials or avatar
     const getInitials = () => {
-        if (user?.displayName) return user.displayName[0].toUpperCase();
+        const name = userData?.displayName || user?.displayName;
+        if (name) return name[0].toUpperCase();
         if (user?.email) return user.email[0].toUpperCase();
         return 'U';
     };
@@ -47,7 +48,7 @@ const UserMenu: React.FC = () => {
             >
                 <div className="text-right hidden sm:block mr-1">
                     <p className="text-xs font-bold text-gray-900 dark:text-white leading-none">
-                        {user?.displayName || 'User'}
+                        {userData?.displayName || user?.displayName || 'User'}
                     </p>
                 </div>
 
@@ -65,7 +66,7 @@ const UserMenu: React.FC = () => {
             {isOpen && (
                 <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700 mb-1">
-                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user?.displayName || 'User'}</p>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{userData?.displayName || user?.displayName || 'User'}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
                     </div>
 
