@@ -177,7 +177,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({ isOpen, onClose, 
 
                                 <div className="pt-4">
                                     <button className="w-full bg-gray-900 text-white font-bold py-4 rounded-2xl hover:bg-black transition-all shadow-xl shadow-gray-200 flex items-center justify-center gap-2 group">
-                                        Plan a Visit
+                                        Add to Wishlist
                                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </div>

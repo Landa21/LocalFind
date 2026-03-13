@@ -13,12 +13,12 @@ const StartTrial: React.FC = () => {
         }
     }, [user, loading, navigate]);
 
-    return (
+    return ( 
         <div className="min-h-screen flex bg-white font-sans text-gray-900">
             {/* Left Side - Image & Testimonial */}
             <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900 overflow-hidden">
                 <video
-                    src="/videos/Pottery.mp4"
+                    src="/videos/Pottery.mp4" 
                     autoPlay
                     loop
                     muted
