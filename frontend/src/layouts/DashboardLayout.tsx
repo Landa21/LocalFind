@@ -17,11 +17,11 @@ const DashboardLayout: React.FC = () => {
     // const navigate = useNavigate(); // unused in this file now
 
     const menuItems = [
-        { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-        { path: '/recommendations', label: 'Recommendations', icon: Sparkles },
-        { path: '/events', label: 'Events', icon: Calendar },
-        { path: '/community-moments', label: 'Moments', icon: MessageSquare },
-        { path: '/favorites', label: 'Favorites', icon: Heart },
+        { path: '/user/dashboard', label: 'Overview', icon: LayoutDashboard },
+        { path: '/user/recommendations', label: 'Recommendations', icon: Sparkles },
+        { path: '/user/events', label: 'Events', icon: Calendar },
+        { path: '/user/moments', label: 'Moments', icon: MessageSquare },
+        { path: '/user/favorites', label: 'Favorites', icon: Heart },
     ];
 
     return (

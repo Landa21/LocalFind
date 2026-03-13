@@ -17,7 +17,7 @@ const SignIn: React.FC = () => {
     // Redirect if already logged in
     useEffect(() => {
         if (user && !authLoading) {
-            navigate('/dashboard', { replace: true });
+            navigate('/user/dashboard', { replace: true });
         }
     }, [user, authLoading, navigate]);
 

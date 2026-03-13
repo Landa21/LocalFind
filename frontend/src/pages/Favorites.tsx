@@ -60,7 +60,7 @@ const Favorites: React.FC = () => {
                             Start exploring the best hidden gems in town and save your favorite moments to see them here in your private collection.
                         </p>
                         <Link
-                            to="/dashboard"
+                            to="/user/dashboard"
                             className="group flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-full font-bold hover:bg-orange-600 transition-all duration-300 shadow-xl shadow-gray-200 hover:shadow-orange-200 active:scale-95"
                         >
                             <Compass className="w-5 h-5 group-hover:rotate-45 transition-transform" />

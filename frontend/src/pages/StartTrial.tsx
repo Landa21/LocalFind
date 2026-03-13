@@ -9,7 +9,7 @@ const StartTrial: React.FC = () => {
 
     React.useEffect(() => {
         if (user && !loading) {
-            navigate('/dashboard', { replace: true });
+            navigate('/user/dashboard', { replace: true });
         }
     }, [user, loading, navigate]);
 

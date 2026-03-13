@@ -18,7 +18,7 @@ export const sendWelcomeEmail = async (email: string, name: string): Promise<voi
     const templateParams = {
       to_name: name,
       to_email: email,
-      message: `Your account has been successfully created on LocalFind. Access your dashboard here: ${window.location.origin}/dashboard`,
+      message: `Your account has been successfully created on LocalFind. Access your dashboard here: ${window.location.origin}/user/dashboard`,
     };
 
     await emailjs.send(serviceId, templateId, templateParams, publicKey);

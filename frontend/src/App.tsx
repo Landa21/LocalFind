@@ -34,13 +34,13 @@ function App() {
               <DashboardLayout />
             </ProtectedRoute>
           }>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/recommendations" element={<Recommendations />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/community-moments" element={<CommunityMoments />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/user/dashboard" element={<Dashboard />} />
+            <Route path="/user/profile" element={<Profile />} />
+            <Route path="/user/recommendations" element={<Recommendations />} />
+            <Route path="/user/events" element={<Events />} />
+            <Route path="/user/moments" element={<CommunityMoments />} />
+            <Route path="/user/favorites" element={<Favorites />} />
+            <Route path="/user/settings" element={<Settings />} />
           </Route>
 
         </Routes>

@@ -239,7 +239,7 @@ const Dashboard: React.FC = () => {
                                 <Sparkles className="w-5 h-5 text-orange-500" />
                                 Recommended for You
                             </h2>
-                            <Link to="/recommendations" className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">See All</Link>
+                            <Link to="/user/recommendations" className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">See All</Link>
                         </div>
                         {filteredRecommendations.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -266,15 +266,17 @@ const Dashboard: React.FC = () => {
                     <section>
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="font-serif text-xl font-bold text-gray-900 dark:text-white transition-colors">Community Moments</h2>
-                            <Link to="/community-moments" className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">View More</Link>
+                             <Link to="/user/moments" className="text-sm font-medium text-orange-600 hover:text-orange-700 transition-colors">View More</Link>
                         </div>
                         <div className="flex items-center justify-center w-full">
                             {stackItems.length > 0 ? (
-                                <div className="dark:card-stack-dark">
+                                <div className="dark:card-stack-dark scale-90 md:scale-100">
                                     <CardStack<ReviewStackItem>
                                         items={stackItems}
-                                        cardWidth={400}
-                                        cardHeight={220}
+                                        cardWidth={300}
+                                        cardHeight={380}
+                                        overlap={0.55}
+                                        spreadDeg={35}
                                         renderCard={(item) => (
                                             <ReviewCard
                                                 {...item.review}
@@ -314,7 +316,7 @@ const Dashboard: React.FC = () => {
                                 <p className="text-gray-400 dark:text-gray-500 text-sm">No events found.</p>
                             </div>
                         )}
-                        <Link to="/events" className="block w-full mt-6 py-2.5 bg-white dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 font-medium rounded-xl hover:bg-orange-50/20 dark:hover:bg-gray-700 transition-colors text-sm border border-transparent dark:border-gray-700 text-center">
+                        <Link to="/user/events" className="block w-full mt-6 py-2.5 bg-white dark:bg-gray-900/50 text-gray-600 dark:text-gray-400 font-medium rounded-xl hover:bg-orange-50/20 dark:hover:bg-gray-700 transition-colors text-sm border border-transparent dark:border-gray-700 text-center">
                             Find More Events
                         </Link>
                     </section>
